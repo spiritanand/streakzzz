@@ -1,0 +1,35 @@
+# Ignore node_modules for all packages
+**/node_modules/
+
+# Ignore dist directories
+**/dist/
+
+# Ignore pnpm-store (pnpm's cache)
+.pnpm-store/
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# Ignore logs and temporary files
+*.log
+*.swp
+*.tmp
+
+# Ignore environment-specific files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore build and output files
+build/
+out/
+output/
+*.build.js
+
+# Ignore user-specific settings files
+.editorconfig
+.eslintcache
+*.DS_Store

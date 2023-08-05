@@ -1,0 +1,28 @@
+{
+  "name": "streakzzz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:client": "pnpm -C apps/client start",
+    "start:server": "pnpm -C apps/server start",
+    "start": "pnpm --stream -r start",
+    "build": "pnpm --stream -r run build"
+  },
+  "keywords": [],
+  "author": "spirit@anandsur.com",
+  "license": "ISC",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.46.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.1",
+    "typescript": "^5.1.6"
+  }
+}

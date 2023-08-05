@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "CommonJS",
+		"strict": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"outDir": "./dist",
+		"rootDir": "./",
+		"declaration": true,
+		"composite": true
+	},
+	"include": ["apps/**/*.ts", "packages/**/*.ts"],
+	"references": [
+		{ "path": "./apps/client/tsconfig.json" },
+		{ "path": "./apps/server/tsconfig.json" },
+		{ "path": "./packages/my-common-package/tsconfig.json" }
+	]
+}
