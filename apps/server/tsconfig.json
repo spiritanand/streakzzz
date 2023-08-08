@@ -1,12 +1,15 @@
 {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
+		"target": "es2016",
+		"module": "CommonJS",
+		"moduleResolution": "nodenext",
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": {
-			"@common/*": ["../../packages/*"]
-		}
+		"skipLibCheck": true,
 	},
-	"include": ["*.ts"],
+	"include": [
+		"src/**/*"
+	],
 	"exclude": ["node_modules", "dist"]
 }
