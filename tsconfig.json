@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "ESNext",
+		"target": "es2016",
 		"module": "CommonJS",
 		"strict": true,
 		"esModuleInterop": true,
@@ -9,12 +9,13 @@
 		"outDir": "./dist",
 		"rootDir": "./",
 		"declaration": true,
-		"composite": true
+		"composite": true,
+		"skipLibCheck": true
 	},
 	"include": ["apps/**/*.ts", "packages/**/*.ts"],
 	"references": [
 		{ "path": "./apps/client/tsconfig.json" },
 		{ "path": "./apps/server/tsconfig.json" },
-		{ "path": "./packages/my-common-package/tsconfig.json" }
+		{ "path": "./packages/shared/tsconfig.json" }
 	]
 }

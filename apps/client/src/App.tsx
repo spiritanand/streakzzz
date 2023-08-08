@@ -1,29 +1,24 @@
-import { useState } from "react";
-import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Root from "./Components/Root.tsx";
+import Login from "./Pages/Auth/Login.tsx";
+import SignUp from "./Pages/Auth/SignUp.tsx";
+import Home from "./Pages/Home.tsx";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <h1>404</h1>,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/login", element: <Login /> },
+    ],
+  },
+  { path: "/signup", element: <SignUp /> },
+]);
 
 function App() {
-  const [count, setCount] = useState<number>(0);
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank"></a>
-        <a href="https://react.dev" target="_blank"></a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
