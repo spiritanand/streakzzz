@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-// import { signUpSchema } from "shared/schemas";
+import { signUpSchema } from "shared/zodSchemas.js";
 
 export const login = (req: Request, res: Response) => {
   // Authentication logic
@@ -7,17 +7,17 @@ export const login = (req: Request, res: Response) => {
 };
 
 export const signup = (req: Request, res: Response) => {
-  // const body = req.body;
+  const body = req.body;
 
-  // const result = signUpSchema.safeParse(body);
-  //
-  // let zodErrors = {};
-  // if (!result.success) {
-  //   result.error?.errors.forEach((issue) => {
-  //     zodErrors = { ...zodErrors, [issue.path[0]]: issue.message };
-  //   });
-  //   return res.status(400).json({ errors: zodErrors, success: false });
-  // }
+  const result = signUpSchema.safeParse(body);
+
+  let zodErrors = {};
+  if (!result.success) {
+    result.error?.errors.forEach((issue) => {
+      zodErrors = { ...zodErrors, [issue.path[0]]: issue.message };
+    });
+    return res.status(400).json({ errors: zodErrors, success: false });
+  }
 
   return res.json({ message: "Signup successful", success: true });
 };

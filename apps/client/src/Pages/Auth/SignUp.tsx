@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { signUpSchema, TSignUpSchema } from "shared/schemas";
+import { signUpSchema, TSignUpSchema } from "shared/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const SignUp = () => {

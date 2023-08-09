@@ -2,12 +2,14 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/app.ts",
-    "build": "tsc",
-    "generate": "drizzle-kit generate:mysql"
+    "prestart": "npm run build",
+    "start": "concurrently \"npx tsc -w\" \"nodemon dist/apps/server/src/app.js\"",
+    "build": "rimraf dist && tsc",
+    "prod": "npm run build && node dist/apps/server/src/app.js",
+    "generate": "drizzle-kit generate:mysql && drizzle-kit push:mysql"
   },
   "keywords": [],
   "author": "",
@@ -15,10 +17,13 @@
   "dependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^20.4.7",
+    "concurrently": "^8.2.0",
     "drizzle-orm": "^0.28.1",
     "express": "^4.18.2",
     "mysql2": "^3.6.0",
+    "rimraf": "^5.0.1",
     "shared": "workspace:*",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6"
   },
   "devDependencies": {

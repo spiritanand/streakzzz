@@ -1,8 +1,8 @@
 {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		"target": "ESNext",
-		"module": "ESNext",
+		"target": "ES2022",
+		"module": "ES2022",
 		"moduleResolution": "node",
 		"outDir": "./dist",
 		"baseUrl": ".",
@@ -11,13 +11,14 @@
 		"strict": true,
 		"removeComments": true,
 		"paths": {
-			"shared/*": [
-				"../../packages/shared/*"
+			"@shared/*": [
+				"../shared/*"
 			]
 		}
 	},
 	"include": [
-		"src/**/*"
+		"src/**/*",
+		"../../packages/shared/**/*"
 	],
 	"exclude": [
 		"node_modules",
