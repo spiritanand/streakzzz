@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon src/app.ts",
     "build": "tsc",
-    "generate": "drizzle-kit generate:pg"
+    "generate": "drizzle-kit generate:mysql"
   },
   "keywords": [],
   "author": "",

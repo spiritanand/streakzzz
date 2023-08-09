@@ -28,6 +28,8 @@ build/
 out/
 output/
 *.build.js
+apps/server/drizzle
+apps/client/vite*.mjs
 
 # Ignore user-specific settings files
 .editorconfig
