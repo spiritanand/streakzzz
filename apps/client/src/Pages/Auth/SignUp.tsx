@@ -1,36 +1,64 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { signUpSchema, TSignUpSchema } from "shared/zodSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import toast from "react-hot-toast";
+import signupImage from "../../assets/signup.avif";
+import useAuth from "../../hooks/useAuth.ts";
+import { queryClient } from "../../main.tsx";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
+  const { data } = useAuth();
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<TSignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit: SubmitHandler<TSignUpSchema> = async (data) => {
-    // const response = await fetch("http://localhost:8080/api/auth/signup", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-    console.log(data);
+  const onSubmit: SubmitHandler<TSignUpSchema> = async (input) => {
+    try {
+      const response = await axios.post("/auth/signup", JSON.stringify(input), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = response.data;
+
+      if (data.success) {
+        toast.success("Signed Up 🚀");
+        await queryClient.invalidateQueries({ queryKey: ["auth"] });
+        navigate("/todos");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (errors) {
+      if (!axios.isAxiosError(errors)) throw errors;
+
+      if (typeof errors.response?.data.errors === "string")
+        toast.error(errors.response?.data.errors);
+
+      for (const [key, value] of Object.entries(errors.response?.data.errors)) {
+        if (typeof value === "string")
+          setError(key as keyof TSignUpSchema, { message: value });
+      }
+    }
   };
 
-  console.log(watch());
+  if (data?.data.success) return <Navigate to="/todos" replace={true} />;
 
   return (
     <div className="container m-auto flex min-h-screen flex-col items-center md:flex-row">
       <div className="w-full bg-red-600 md:w-1/3 md:bg-black">
         <img
-          src="https://images.unsplash.com/photo-1533107862482-0e6974b06ec4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1041&q=80"
+          src={signupImage}
           alt="Unleash your potential"
           className="m-auto h-60 w-full object-cover p-8 grayscale md:h-screen"
         />
@@ -41,9 +69,12 @@ const SignUp = () => {
         noValidate
       >
         <div className="mt-6 text-center">
-          <h1 className="text-4xl font-extrabold text-red-600">Sign Up</h1>
+          <h1 className="text-4xl font-extrabold text-red-600 sm:text-5xl">
+            Sign Up
+          </h1>
           <p className="mt-3">
-            Join StreakZZZ and fulfill your <b>potential</b>
+            Join StreakZZZ and fulfill your{" "}
+            <span className="font-bold">potential</span>
           </p>
         </div>
         <label htmlFor="name" className="flex flex-col gap-1 md:w-1/2 md:gap-2">

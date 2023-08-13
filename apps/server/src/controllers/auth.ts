@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
-import { signUpSchema } from "shared/zodSchemas.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+const { verify } = jwt;
+import { eq } from "drizzle-orm";
+import { loginSchema, signUpSchema } from "shared/zodSchemas.js";
 
-export const login = (req: Request, res: Response) => {
-  // Authentication logic
-  res.json({ message: "Login successful" });
-};
+import { db } from "../db/database.js";
+import { users } from "../schema.js";
 
-export const signup = (req: Request, res: Response) => {
+export const postSignup = async (req: Request, res: Response) => {
   const body = req.body;
 
   const result = signUpSchema.safeParse(body);
@@ -14,10 +16,178 @@ export const signup = (req: Request, res: Response) => {
   let zodErrors = {};
   if (!result.success) {
     result.error?.errors.forEach((issue) => {
-      zodErrors = { ...zodErrors, [issue.path[0]]: issue.message };
+      zodErrors = {
+        ...zodErrors,
+        [issue.path[0]]: issue.message,
+      };
     });
-    return res.status(400).json({ errors: zodErrors, success: false });
+
+    res.status(400).json({
+      errors: zodErrors,
+      success: false,
+    });
+
+    return;
   }
 
-  return res.json({ message: "Signup successful", success: true });
+  try {
+    const hashedPassword = await bcrypt.hash(body.password, 10);
+
+    const returned = await db
+      .insert(users)
+      .values({ ...body, password: hashedPassword });
+
+    const token = jwt.sign(
+      { email: body.email, userId: returned[0].insertId },
+      "SECRET_KEY",
+      {
+        expiresIn: "1h",
+      },
+    );
+
+    // Set the token as a cookie
+    res
+      .cookie("jwt", token, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000,
+        sameSite: true,
+      })
+      .json({
+        message: "Signup successful",
+        success: true,
+      });
+  } catch (error) {
+    console.log({ error });
+
+    if (error instanceof Error) {
+      res.status(409).json({
+        errors: error.message,
+        success: false,
+      });
+      return;
+    }
+
+    res.status(500).json({
+      errors: "Something went wrong",
+      success: false,
+    });
+  }
+};
+
+export const postLogin = async (req: Request, res: Response) => {
+  const body = req.body;
+
+  const result = loginSchema.safeParse(body);
+
+  let zodErrors = {};
+  if (!result.success) {
+    result.error?.errors.forEach((issue) => {
+      zodErrors = {
+        ...zodErrors,
+        [issue.path[0]]: issue.message,
+      };
+    });
+
+    res.status(400).json({
+      errors: zodErrors,
+      success: false,
+    });
+
+    return;
+  }
+
+  try {
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, body.email));
+
+    if (user.length === 0) {
+      res.status(403).json({
+        errors: "Invalid credentials",
+        success: false,
+      });
+      return;
+    }
+
+    const match = await bcrypt.compare(body.password, user[0].password);
+
+    if (!match) {
+      res.status(403).json({
+        errors: "Invalid credentials",
+        success: false,
+      });
+      return;
+    }
+
+    const token = jwt.sign(
+      { email: body.email, userId: user[0].id },
+      "SECRET_KEY",
+      {
+        expiresIn: "1h",
+      },
+    );
+
+    // Set the token as a cookie
+    res
+      .cookie("jwt", token, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000,
+        sameSite: true,
+      })
+      .json({
+        message: "Login successful",
+        success: true,
+      });
+  } catch (error) {
+    res.status(500).json({
+      errors: "Something went wrong",
+      success: false,
+    });
+  }
+};
+
+export const postLogout = async (req: Request, res: Response) => {
+  res.clearCookie("jwt");
+  res.json({
+    message: "Logout successful",
+    success: true,
+  });
+};
+
+export const getMe = async (req: Request, res: Response) => {
+  const jwt = req.cookies.jwt;
+
+  try {
+    const decoded = verify(jwt, "SECRET_KEY");
+
+    if (
+      decoded &&
+      typeof decoded === "object" &&
+      typeof decoded.userId === "number"
+    ) {
+      const userId = decoded.userId;
+
+      const user = await db.select().from(users).where(eq(users.id, userId));
+
+      if (user.length > 0) {
+        res.json({
+          success: true,
+        });
+
+        return;
+      }
+    }
+
+    res.status(500).json({
+      errors: "Something went wrong",
+      success: false,
+    });
+  } catch (e) {
+    res.clearCookie("jwt");
+    res.json({
+      errors: "Invalid token",
+      success: false,
+    });
+  }
 };

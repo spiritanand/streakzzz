@@ -1,5 +1,10 @@
 import express, { Router } from "express";
-import { login, signup } from "../controllers/auth.js";
+import {
+  getMe,
+  postLogin,
+  postLogout,
+  postSignup,
+} from "../controllers/auth.js";
 
 const router: Router = Router();
 
@@ -7,7 +12,11 @@ const router: Router = Router();
 router.use(express.json());
 
 // Authentication routes
-router.post("/login", login);
-router.post("/signup", signup);
+router.get("/me", getMe);
+
+router.post("/login", postLogin);
+router.post("/signup", postSignup);
+
+router.post("/logout", postLogout);
 
 export default router;

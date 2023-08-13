@@ -1,4 +1,7 @@
 import mysql from "mysql2/promise";
+import { drizzle } from "drizzle-orm/mysql2";
+
+import * as schema from "../schema.js";
 
 const connection = await mysql.createConnection({
   host: "localhost",
@@ -7,4 +10,6 @@ const connection = await mysql.createConnection({
   database: "streakzzz",
 });
 
-export { connection };
+const db = drizzle(connection, { schema, mode: "default" });
+
+export { db };
