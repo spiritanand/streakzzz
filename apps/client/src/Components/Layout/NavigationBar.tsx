@@ -56,8 +56,9 @@ const NavigationBar = () => {
 
       <nav
         className={`${
-          isOpen ? "absolute" : "hidden"
-        } left-0 top-20 z-10 bg-gray-900 p-4 font-bold sm:block`}
+          isOpen ? "top-16" : "-top-full"
+        } absolute left-0 z-10 bg-gray-900 p-4 font-bold transition-all duration-700 ease-in-out sm:static`}
+        onClick={() => setIsOpen((prev) => !prev)}
       >
         <ul className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           {/*Show sign up and postLogin button only if user is not authenticated */}
