@@ -5,14 +5,20 @@ type ButtonProps = {
   isSubmitting?: boolean;
   children?: React.ReactNode;
   className?: string;
+  type?: "button" | "submit" | "reset";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-function Button({ isSubmitting, children, className }: ButtonProps) {
+function Button({
+  isSubmitting,
+  children = "Submit",
+  className,
+  type = "button",
+}: ButtonProps) {
   return (
     <button
-      type="submit"
+      type={type}
       className={twMerge(
-        "mt-3 cursor-pointer rounded-2xl bg-gradient-to-r from-red-600 to-red-500 p-2 font-bold  uppercase drop-shadow transition hover:scale-105 hover:bg-gradient-to-l focus:outline-white disabled:cursor-not-allowed disabled:opacity-75",
+        "cursor-pointer rounded-2xl bg-gradient-to-r from-red-600 to-red-500 p-2 font-bold  uppercase drop-shadow transition hover:scale-105 hover:bg-gradient-to-l focus:outline-white disabled:cursor-not-allowed disabled:opacity-75",
         className,
       )}
       disabled={isSubmitting}

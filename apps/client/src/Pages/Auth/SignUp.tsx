@@ -96,7 +96,11 @@ const SignUp = () => {
           type="email"
         />
         <PasswordInput errors={errors} register={register} />
-        <Button isSubmitting={isSubmitting} className="md:w-1/2" />
+        <Button
+          isSubmitting={isSubmitting}
+          className="mt-3 md:w-1/2"
+          type="submit"
+        />
         <div className="text-center">
           Already registered?
           <Link

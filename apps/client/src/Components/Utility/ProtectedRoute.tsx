@@ -1,14 +1,13 @@
-import { Navigate, Outlet } from "react-router-dom";
-import useAuth from "../../hooks/useAuth.ts";
+import { Outlet } from "react-router-dom";
 
 function ProtectedRoute() {
-  const { data } = useAuth();
+  // const { data } = useAuth();
 
-  return data?.data.success ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/login" replace={true} />
-  );
+  // return data?.data.success ? (
+  return <Outlet />;
+  // ) : (
+  //   <Navigate to="/login" replace={true} />
+  // );
 }
 
 export default ProtectedRoute;

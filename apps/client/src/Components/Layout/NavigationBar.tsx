@@ -5,6 +5,7 @@ import useAuth from "../../hooks/useAuth.ts";
 import axios from "axios";
 import { queryClient } from "../../main.tsx";
 import toast from "react-hot-toast";
+import Button from "../UI/Button.tsx";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
@@ -57,10 +58,10 @@ const NavigationBar = () => {
       <nav
         className={`${
           isOpen ? "top-16" : "-top-full"
-        } absolute left-0 z-10 bg-gray-900 p-4 font-bold transition-all duration-700 ease-in-out sm:static`}
+        } absolute left-0 z-10 bg-gray-900 p-4 font-bold transition-all duration-500 ease-in-out sm:static`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <ul className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <ul className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-4">
           {/*Show sign up and postLogin button only if user is not authenticated */}
           {!data?.data.success ? (
             <>
@@ -68,11 +69,8 @@ const NavigationBar = () => {
                 <Link to="/login">Login</Link>
               </li>
               <li>
-                <Link
-                  to="/signup"
-                  className="rounded-2xl bg-red-600 bg-gradient-to-r from-red-600 to-red-500 p-3 hover:bg-gradient-to-l"
-                >
-                  Sign Up
+                <Link to="/signup">
+                  <Button>Sign Up</Button>
                 </Link>
               </li>
             </>

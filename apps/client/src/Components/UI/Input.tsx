@@ -10,18 +10,19 @@ type InputProps<T extends FieldValues> = {
   register: UseFormRegister<T>;
   errors: FieldErrors<T>;
   fieldName: string;
-  label: string;
+  label?: string;
   placeholder: string;
   type?: string;
+  className?: string;
 };
 
 function Input<T extends FieldValues>({
   register,
   errors,
   fieldName,
-  label,
+  label = "",
   placeholder,
-  type,
+  type = "text",
 }: InputProps<T>) {
   return (
     <label
@@ -33,7 +34,7 @@ function Input<T extends FieldValues>({
         {...register(fieldName as Path<T>)}
         placeholder={placeholder}
         id={fieldName}
-        type={type || "text"}
+        type={type}
         className="rounded border-none bg-transparent p-2 outline-none focus:bg-gray-800"
       />
       {errors[fieldName] ? (
