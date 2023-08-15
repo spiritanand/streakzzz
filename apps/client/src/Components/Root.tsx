@@ -7,7 +7,7 @@ import Loading from "../Pages/Loading/Loading.tsx";
 const Root = () => {
   const { isLoading, isFetched } = useAuth();
 
-  if (isLoading && !isFetched) return <Loading />;
+  if (isLoading && !isFetched) return <Loading className="h-screen" />;
 
   return (
     <>

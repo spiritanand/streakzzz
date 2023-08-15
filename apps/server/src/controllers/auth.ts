@@ -29,18 +29,20 @@ export const postSignup = async (req: Request, res: Response) => {
     return;
   }
 
+  const { email, password } = result.data;
+
   try {
-    const hashedPassword = await bcrypt.hash(body.password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const returned = await db
       .insert(users)
       .values({ ...body, password: hashedPassword });
 
     const token = jwt.sign(
-      { email: body.email, userId: returned[0].insertId },
+      { email, userId: returned[0].insertId },
       "SECRET_KEY",
       {
-        expiresIn: "1h",
+        expiresIn: "10h",
       },
     );
 
@@ -95,11 +97,10 @@ export const postLogin = async (req: Request, res: Response) => {
     return;
   }
 
+  const { email, password } = result.data;
+
   try {
-    const user = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, body.email));
+    const user = await db.select().from(users).where(eq(users.email, email));
 
     if (user.length === 0) {
       res.status(403).json({
@@ -109,7 +110,7 @@ export const postLogin = async (req: Request, res: Response) => {
       return;
     }
 
-    const match = await bcrypt.compare(body.password, user[0].password);
+    const match = await bcrypt.compare(password, user[0].password);
 
     if (!match) {
       res.status(403).json({
@@ -119,13 +120,9 @@ export const postLogin = async (req: Request, res: Response) => {
       return;
     }
 
-    const token = jwt.sign(
-      { email: body.email, userId: user[0].id },
-      "SECRET_KEY",
-      {
-        expiresIn: "1h",
-      },
-    );
+    const token = jwt.sign({ email, userId: user[0].id }, "SECRET_KEY", {
+      expiresIn: "1h",
+    });
 
     // Set the token as a cookie
     res

@@ -1,10 +1,12 @@
 import Button from "../UI/Button.tsx";
 import { useForm } from "react-hook-form";
-import { addTodoSchema, TAddTodoSchema } from "shared/zodSchemas.ts";
+import { TAddTodoSchema, addTodoSchema } from "shared/zodSchemas.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "react-query";
 import axios from "axios";
 import { queryClient } from "../../main.tsx";
+import { TodoType } from "../../Types/types.ts";
+import toast from "react-hot-toast";
 
 function AddTodo() {
   const {
@@ -16,10 +18,6 @@ function AddTodo() {
     resolver: zodResolver(addTodoSchema),
   });
 
-  type Todos =
-    | { data: { todos: { content: string; id: number; done: boolean }[] } }
-    | undefined;
-
   const { mutate } = useMutation(
     async (data: TAddTodoSchema) => {
       await axios.post("/todo/add", { content: data.content });
@@ -28,21 +26,32 @@ function AddTodo() {
       onMutate: async (data: TAddTodoSchema) => {
         await queryClient.cancelQueries("todos");
 
-        const previousTodos: Todos = queryClient.getQueryData("todos");
+        const previousTodos: { data: { todos: TodoType[] } } | undefined =
+          queryClient.getQueryData("todos");
 
         if (previousTodos?.data?.todos) {
           queryClient.setQueryData("todos", () => {
-            return [
-              ...previousTodos.data.todos,
-              { content: data.content, id: Date.now(), done: false },
-            ];
+            return {
+              data: {
+                success: true,
+                todos: [
+                  ...previousTodos.data.todos,
+                  { content: data.content, id: Date.now(), done: false },
+                ],
+              },
+            };
           });
+
+          toast.success("Todo added ✌️");
 
           return { previousTodos };
         }
       },
-      onError: (_error, _data, context) => {
+      onError: (error, _data, context) => {
         queryClient.setQueryData("todos", context?.previousTodos);
+
+        if (error instanceof Error) toast.error(error.message);
+        else toast.error("Could not add 😶");
       },
       onSettled: async () => {
         await queryClient.invalidateQueries("todos");
@@ -58,7 +67,7 @@ function AddTodo() {
   return (
     <>
       <form
-        className="container mx-auto flex flex-wrap items-center justify-center gap-5"
+        className="container mx-auto mt-5 flex flex-wrap items-center justify-center gap-5"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
       >

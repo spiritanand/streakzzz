@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { todos, users } from "../schema.js";
 import { db } from "../db/database.js";
-import { addTodoSchema } from "shared/zodSchemas.js";
+import { addTodoSchema, toggleTodoSchema } from "shared/zodSchemas.js";
 
 export const getTodos = async (req: Request, res: Response) => {
   const userId = req.headers.userId;
@@ -45,13 +45,70 @@ export const postAddTodo = async (req: Request, res: Response) => {
     return;
   }
 
+  const { content } = result.data;
+
   try {
     if (typeof userId === "string") {
-      await db.insert(todos).values({ content: body.content, userId: +userId });
+      await db.insert(todos).values({ content, userId: +userId });
 
       res.json({
         success: true,
         message: "Todo added",
+      });
+
+      return;
+    }
+  } catch (e) {
+    res.status(500).json({
+      errors: "Something went wrong",
+      success: false,
+    });
+  }
+};
+
+export const postToggleTodo = async (req: Request, res: Response) => {
+  const userId = req.headers.userId;
+
+  const body = req.body;
+
+  const result = toggleTodoSchema.safeParse(body);
+
+  if (!result.success) {
+    console.log({ result });
+    res.status(400).json({
+      errors: result.error?.errors[0].message,
+      success: false,
+    });
+
+    return;
+  }
+
+  const { id: todoId } = result.data;
+
+  try {
+    if (typeof userId === "string") {
+      const returned = await db
+        .select()
+        .from(todos)
+        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+
+      if (returned.length === 0) {
+        res.status(404).json({
+          errors: "Todo not found",
+          success: false,
+        });
+
+        return;
+      }
+
+      await db
+        .update(todos)
+        .set({ done: !returned[0].done })
+        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+
+      res.json({
+        success: true,
+        message: "Todo updated",
       });
 
       return;
