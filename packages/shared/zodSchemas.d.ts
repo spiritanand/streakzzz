@@ -25,10 +25,10 @@ export declare const loginSchema: z.ZodObject<{
 }>;
 export type TLoginSchema = z.infer<typeof loginSchema>;
 export declare const addTodoSchema: z.ZodObject<{
-    todo: z.ZodString;
+    content: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    todo: string;
+    content: string;
 }, {
-    todo: string;
+    content: string;
 }>;
 export type TAddTodoSchema = z.infer<typeof addTodoSchema>;

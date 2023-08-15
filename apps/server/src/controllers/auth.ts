@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-const { verify } = jwt;
 import { eq } from "drizzle-orm";
 import { loginSchema, signUpSchema } from "shared/zodSchemas.js";
 
@@ -156,38 +155,7 @@ export const postLogout = async (req: Request, res: Response) => {
 };
 
 export const getMe = async (req: Request, res: Response) => {
-  const jwt = req.cookies.jwt;
-
-  try {
-    const decoded = verify(jwt, "SECRET_KEY");
-
-    if (
-      decoded &&
-      typeof decoded === "object" &&
-      typeof decoded.userId === "number"
-    ) {
-      const userId = decoded.userId;
-
-      const user = await db.select().from(users).where(eq(users.id, userId));
-
-      if (user.length > 0) {
-        res.json({
-          success: true,
-        });
-
-        return;
-      }
-    }
-
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
-  } catch (e) {
-    res.clearCookie("jwt");
-    res.json({
-      errors: "Invalid token",
-      success: false,
-    });
-  }
+  res.json({
+    success: true,
+  });
 };

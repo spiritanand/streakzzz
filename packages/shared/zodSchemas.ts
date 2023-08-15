@@ -34,6 +34,6 @@ export const loginSchema = z.object({
 export type TLoginSchema = z.infer<typeof loginSchema>;
 
 export const addTodoSchema = z.object({
-  todo: z.string().min(3, "A Todo must be at least 3 characters long"),
+  content: z.string().min(3, "A Todo must be at least 3 characters long"),
 });
 export type TAddTodoSchema = z.infer<typeof addTodoSchema>;

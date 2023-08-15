@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { migrate } from "drizzle-orm/mysql2/migrator";
 
+import { jwtVerify } from "./middlewares/jwtVerify.js";
 import auth from "./routes/auth.js";
-import { db } from "./db/database.js";
+import todos from "./routes/todos.js";
 
 const app = express();
 
@@ -27,6 +27,7 @@ const port = process.env.PORT || 8080;
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 // app.use(cors());
 
+app.use(express.json());
 app.use(cookieParser());
 
 app.get("/", (_req, res) => {
@@ -34,9 +35,8 @@ app.get("/", (_req, res) => {
 });
 
 app.listen(port, async () => {
-  await migrate(db, { migrationsFolder: "drizzle" });
-
   console.log(`Server is running on port ${port}`);
 });
 
 app.use("/auth", auth);
+app.use(jwtVerify, todos);

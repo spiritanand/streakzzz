@@ -1,8 +1,40 @@
-import { mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
+import {
+  boolean,
+  int,
+  mysqlTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/mysql-core";
+import { InferModel, relations } from "drizzle-orm";
 
 export const users = mysqlTable("users", {
-  id: serial("id").primaryKey().autoincrement(),
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   email: varchar("email", { length: 256 }).unique().notNull(),
   password: varchar("password", { length: 256 }).notNull(),
 });
+
+export type User = InferModel<typeof users>;
+
+export const usersRelations = relations(users, ({ many }) => ({
+  todos: many(todos),
+}));
+
+export const todos = mysqlTable("todos", {
+  id: serial("id").primaryKey(),
+  content: text("content").notNull(),
+  done: boolean("done").default(false),
+  timestamp: timestamp("timestamp").defaultNow(),
+  userId: int("user_id").notNull(),
+});
+
+export type Todo = InferModel<typeof todos>;
+
+export const todosRelations = relations(todos, ({ one }) => ({
+  user: one(users, {
+    fields: [todos.userId],
+    references: [users.id],
+  }),
+}));

@@ -1,14 +1,25 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import { queryClient } from "../main.tsx";
 
-const fetchAuthState = async () => axios.get("/auth/me");
+const fetchAuthState = async () => {
+  try {
+    return await axios.get("/auth/me");
+  } catch (e) {
+    throw new Error("Not authenticated");
+  }
+};
 
 const useAuth = () => {
   return useQuery(["auth"], fetchAuthState, {
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
     retry: false,
-    refetchInterval: 60 * 1000,
+    staleTime: 60 * 1000,
+    onError: (error) => {
+      if (error instanceof Error)
+        queryClient.setQueryData("auth", {
+          data: { success: false, message: error.message },
+        });
+    },
   });
 };
 
