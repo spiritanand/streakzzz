@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { eq } from "drizzle-orm";
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import { loginSchema, signUpSchema } from "shared/zodSchemas.js";
 
 import { db } from "../db/database.js";
@@ -58,8 +58,6 @@ export const postSignup = async (req: Request, res: Response) => {
         success: true,
       });
   } catch (error) {
-    console.log({ error });
-
     if (error instanceof Error) {
       res.status(409).json({
         errors: error.message,

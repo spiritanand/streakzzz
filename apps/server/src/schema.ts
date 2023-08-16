@@ -1,3 +1,4 @@
+import { InferModel, relations } from "drizzle-orm";
 import {
   boolean,
   int,
@@ -7,20 +8,14 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { InferModel, relations } from "drizzle-orm";
 
+// Tables
 export const users = mysqlTable("users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   email: varchar("email", { length: 256 }).unique().notNull(),
   password: varchar("password", { length: 256 }).notNull(),
 });
-
-export type User = InferModel<typeof users>;
-
-export const usersRelations = relations(users, ({ many }) => ({
-  todos: many(todos),
-}));
 
 export const todos = mysqlTable("todos", {
   id: serial("id").primaryKey(),
@@ -30,7 +25,14 @@ export const todos = mysqlTable("todos", {
   userId: int("user_id").notNull(),
 });
 
+// Types
+export type User = InferModel<typeof users>;
 export type Todo = InferModel<typeof todos>;
+
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  todos: many(todos),
+}));
 
 export const todosRelations = relations(todos, ({ one }) => ({
   user: one(users, {

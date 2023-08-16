@@ -1,7 +1,8 @@
 import axios from "axios";
-import toast from "react-hot-toast";
-import { TodoType } from "../../Types/types.ts";
 import { useState } from "react";
+import toast from "react-hot-toast";
+
+import { TodoType } from "../../Types/types.ts";
 import { queryClient } from "../../main.tsx";
 
 type TodoItemProps = {

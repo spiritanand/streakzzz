@@ -1,8 +1,9 @@
 import { Outlet } from "react-router-dom";
-import NavigationBar from "./Layout/NavigationBar.tsx";
+
 import Footer from "./Layout/Footer.tsx";
-import useAuth from "../hooks/useAuth.ts";
+import NavigationBar from "./Layout/NavigationBar.tsx";
 import Loading from "../Pages/Loading/Loading.tsx";
+import useAuth from "../hooks/useAuth.ts";
 
 const Root = () => {
   const { isLoading, isFetched } = useAuth();

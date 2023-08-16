@@ -1,10 +1,10 @@
+import { ReactNode, useState } from "react";
 import {
   FieldErrors,
   FieldValues,
   Path,
   UseFormRegister,
 } from "react-hook-form";
-import { ReactNode, useState } from "react";
 
 type Props<T extends FieldValues> = {
   register: UseFormRegister<T>;

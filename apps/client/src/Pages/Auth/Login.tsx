@@ -1,15 +1,16 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth.ts";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { loginSchema, TLoginSchema } from "shared/zodSchemas.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
+import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { queryClient } from "../../main.tsx";
-import loginImage from "../../assets/login.avif";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { TLoginSchema, loginSchema } from "shared/zodSchemas.ts";
+
+import Button from "../../Components/UI/Button.tsx";
 import Input from "../../Components/UI/Input.tsx";
 import PasswordInput from "../../Components/UI/PasswordInput.tsx";
-import Button from "../../Components/UI/Button.tsx";
+import loginImage from "../../assets/login.avif";
+import useAuth from "../../hooks/useAuth.ts";
+import { queryClient } from "../../main.tsx";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,25 +34,27 @@ const Login = () => {
         },
       });
 
-      const data = response.data;
+      const res = response.data;
 
-      if (data.success) {
+      if (res.success) {
         toast.success("Logged In 🚀");
         await queryClient.invalidateQueries({ queryKey: ["auth"] });
         navigate("/todos");
       } else {
         toast.error("Something went wrong");
       }
-    } catch (errors) {
-      if (!axios.isAxiosError(errors)) throw errors;
+    } catch (e) {
+      if (!isAxiosError(e)) throw e;
 
-      if (typeof errors.response?.data.errors === "string")
-        toast.error(errors.response?.data.errors);
+      if (typeof e.response?.data.errors === "string")
+        toast.error(e.response?.data.errors);
 
-      for (const [key, value] of Object.entries(errors.response?.data.errors)) {
+      const errorData = e.response?.data.errors;
+      Object.keys(errorData).forEach((key) => {
+        const value = errorData[key];
         if (typeof value === "string")
           setError(key as keyof TLoginSchema, { message: value });
-      }
+      });
     }
   };
 

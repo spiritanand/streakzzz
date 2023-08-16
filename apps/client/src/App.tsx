@@ -1,17 +1,18 @@
+import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import { ReactQueryDevtools } from "react-query/devtools";
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
   Route,
   RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
 } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+
 import Root from "./Components/Root.tsx";
+import ProtectedRoute from "./Components/Utility/ProtectedRoute.tsx";
 import Login from "./Pages/Auth/Login.tsx";
 import SignUp from "./Pages/Auth/SignUp.tsx";
 import Home from "./Pages/Home.tsx";
-import axios from "axios";
-import ProtectedRoute from "./Components/Utility/ProtectedRoute.tsx";
-import { ReactQueryDevtools } from "react-query/devtools";
 import Todos from "./Pages/Todos/Todos.tsx";
 
 axios.defaults.withCredentials = true;

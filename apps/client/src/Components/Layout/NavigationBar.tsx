@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
+import axios, { isAxiosError } from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+
 import "./NavigationBar.css";
 import useAuth from "../../hooks/useAuth.ts";
-import axios from "axios";
 import { queryClient } from "../../main.tsx";
-import toast from "react-hot-toast";
 import Button from "../UI/Button.tsx";
 
 const NavigationBar = () => {
@@ -22,7 +23,7 @@ const NavigationBar = () => {
 
       navigate("/");
     } catch (errors) {
-      if (!axios.isAxiosError(errors)) throw errors;
+      if (!isAxiosError(errors)) throw errors;
 
       if (typeof errors.response?.data.errors === "string")
         toast.error(errors.response?.data.errors);
@@ -62,7 +63,7 @@ const NavigationBar = () => {
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <ul className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-4">
-          {/*Show sign up and postLogin button only if user is not authenticated */}
+          {/* Show sign up and postLogin button only if user is not authenticated */}
           {!data?.data.success ? (
             <>
               <li>

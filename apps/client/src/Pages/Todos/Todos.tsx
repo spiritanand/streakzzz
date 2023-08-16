@@ -1,9 +1,10 @@
-import AddTodo from "../../Components/Todos/AddTodo.tsx";
 import axios from "axios";
-import Loading from "../Loading/Loading.tsx";
 import { useQuery } from "react-query";
+
+import AddTodo from "../../Components/Todos/AddTodo.tsx";
 import TodoItem from "../../Components/Todos/TodoItem.tsx";
 import { TodoType } from "../../Types/types.ts";
+import Loading from "../Loading/Loading.tsx";
 
 function Todos() {
   const { data, isLoading, error } = useQuery(

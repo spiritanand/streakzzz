@@ -1,12 +1,13 @@
-import Button from "../UI/Button.tsx";
-import { useForm } from "react-hook-form";
-import { TAddTodoSchema, addTodoSchema } from "shared/zodSchemas.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "react-query";
 import axios from "axios";
-import { queryClient } from "../../main.tsx";
-import { TodoType } from "../../Types/types.ts";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useMutation } from "react-query";
+import { TAddTodoSchema, addTodoSchema } from "shared/zodSchemas.ts";
+
+import { TodoType } from "../../Types/types.ts";
+import { queryClient } from "../../main.tsx";
+import Button from "../UI/Button.tsx";
 
 function AddTodo() {
   const {
@@ -43,9 +44,9 @@ function AddTodo() {
           });
 
           toast.success("Todo added ✌️");
-
-          return { previousTodos };
         }
+
+        return { previousTodos };
       },
       onError: (error, _data, context) => {
         queryClient.setQueryData("todos", context?.previousTodos);

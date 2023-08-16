@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
 import { and, eq } from "drizzle-orm";
-
-import { todos, users } from "../schema.js";
-import { db } from "../db/database.js";
+import { Request, Response } from "express";
 import { addTodoSchema, toggleTodoSchema } from "shared/zodSchemas.js";
+
+import { db } from "../db/database.js";
+import { todos, users } from "../schema.js";
 
 export const getTodos = async (req: Request, res: Response) => {
   const userId = req.headers.userId;
@@ -55,8 +55,6 @@ export const postAddTodo = async (req: Request, res: Response) => {
         success: true,
         message: "Todo added",
       });
-
-      return;
     }
   } catch (e) {
     res.status(500).json({
@@ -74,7 +72,6 @@ export const postToggleTodo = async (req: Request, res: Response) => {
   const result = toggleTodoSchema.safeParse(body);
 
   if (!result.success) {
-    console.log({ result });
     res.status(400).json({
       errors: result.error?.errors[0].message,
       success: false,
@@ -110,8 +107,6 @@ export const postToggleTodo = async (req: Request, res: Response) => {
         success: true,
         message: "Todo updated",
       });
-
-      return;
     }
   } catch (e) {
     res.status(500).json({
