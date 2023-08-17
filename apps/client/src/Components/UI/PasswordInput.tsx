@@ -26,10 +26,10 @@ function PasswordInput<T extends FieldValues>({ register, errors }: Props<T>) {
       <label className="mt-0.5 flex items-center">
         <input
           type="checkbox"
-          className="form-checkbox h-5 w-5 text-indigo-600"
+          className="form-checkbox h-5 w-5 cursor-pointer text-indigo-600"
           onChange={() => setIsPassword(!isPassword)}
         />
-        <span className="ml-2 text-sm">Show password</span>
+        <span className="ml-2 cursor-pointer text-sm">Show password</span>
       </label>
       {errors.password ? (
         <span className="text-amber-400">

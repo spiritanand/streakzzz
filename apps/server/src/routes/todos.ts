@@ -6,6 +6,6 @@ const router: Router = Router();
 
 router.get("/todos", getTodos);
 router.post("/todo/add", postAddTodo);
-router.post("/todo/toggle", postToggleTodo);
+router.patch("/todo/toggle", postToggleTodo);
 
 export default router;

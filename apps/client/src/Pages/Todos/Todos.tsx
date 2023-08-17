@@ -29,7 +29,7 @@ function Todos() {
     <div className="min-h-screen">
       <AddTodo />
       {data?.data?.todos.length > 0 ? (
-        <ul className="container mx-auto mt-5 flex flex-col gap-6">
+        <ul className="container mx-auto mt-5 flex flex-col gap-10">
           {data?.data?.todos?.map((todo: TodoType) => (
             <TodoItem key={todo.id} todo={todo} />
           ))}

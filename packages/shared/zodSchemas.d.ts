@@ -40,3 +40,14 @@ export declare const toggleTodoSchema: z.ZodObject<{
     id: number;
 }>;
 export type TToggleTodoSchema = z.infer<typeof toggleTodoSchema>;
+export declare const editTodoSchema: z.ZodObject<{
+    id: z.ZodNumber;
+    content: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    content: string;
+    id: number;
+}, {
+    content: string;
+    id: number;
+}>;
+export type TEditTodoSchema = z.infer<typeof editTodoSchema>;

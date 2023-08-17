@@ -25,3 +25,7 @@ export const addTodoSchema = z.object({
 export const toggleTodoSchema = z.object({
     id: z.number().positive().int(),
 });
+export const editTodoSchema = z.object({
+    id: z.number().positive().int(),
+    content: z.string().min(3, "A TodoType must be at least 3 characters long"),
+});
