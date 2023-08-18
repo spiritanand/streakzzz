@@ -171,3 +171,43 @@ export const postEditTodo = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteTodo = async (req: Request, res: Response) => {
+  const userId = req.headers.userId;
+
+  const params = req.params;
+
+  const todoId = params.id;
+
+  try {
+    if (typeof userId === "string" && typeof todoId === "string") {
+      const returned = await db
+        .select()
+        .from(todos)
+        .where(and(eq(todos.id, +todoId), eq(todos.userId, +userId)));
+
+      if (returned.length === 0) {
+        res.status(404).json({
+          errors: "Todo not found",
+          success: false,
+        });
+
+        return;
+      }
+
+      await db
+        .delete(todos)
+        .where(and(eq(todos.id, +todoId), eq(todos.userId, +userId)));
+
+      res.json({
+        success: true,
+        message: "Todo deleted",
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      errors: "Something went wrong",
+      success: false,
+    });
+  }
+};

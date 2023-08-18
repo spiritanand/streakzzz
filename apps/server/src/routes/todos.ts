@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import {
+  deleteTodo,
   getTodos,
   postAddTodo,
   postEditTodo,
@@ -10,8 +11,12 @@ import {
 const router: Router = Router();
 
 router.get("/todos", getTodos);
+
 router.post("/todo/add", postAddTodo);
+
 router.patch("/todo/toggle", postToggleTodo);
 router.patch("/todo/edit", postEditTodo);
+
+router.delete("/todo/delete/:id", deleteTodo);
 
 export default router;

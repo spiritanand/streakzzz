@@ -35,7 +35,9 @@ function Todos() {
           ))}
         </ul>
       ) : (
-        <div>You are all clear for the day 🤩</div>
+        <div className="mt-16 text-center text-xl font-bold sm:text-3xl">
+          You are all clear for the day 🤩
+        </div>
       )}
     </div>
   );

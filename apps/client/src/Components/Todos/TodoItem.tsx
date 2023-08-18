@@ -63,6 +63,18 @@ function TodoItem({ todo }: TodoItemProps) {
     }
   };
 
+  const handleDeleteTodo = async () => {
+    try {
+      const res = await axios.delete(`/todo/delete/${todo.id}`);
+      toast.success(res.data.message);
+    } catch (e) {
+      if (e instanceof Error) toast.error(e.message);
+      else toast.error("Something went wrong");
+    } finally {
+      await queryClient.invalidateQueries("todos");
+    }
+  };
+
   return (
     <li className="flex items-center justify-center gap-6 border-b-amber-500 px-5 sm:gap-10">
       <input
@@ -126,7 +138,9 @@ function TodoItem({ todo }: TodoItemProps) {
           <X />
         </button>
       </form>
-      <Delete className="cursor-pointer" />
+      <button onClick={handleDeleteTodo}>
+        <Delete className="cursor-pointer" />
+      </button>
     </li>
   );
 }
