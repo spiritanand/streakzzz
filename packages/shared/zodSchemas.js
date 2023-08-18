@@ -20,12 +20,12 @@ export const loginSchema = z.object({
         .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{10,100}$/, "Password must contain at least one letter, one digit and a special character"),
 });
 export const addTodoSchema = z.object({
-    content: z.string().min(3, "A TodoType must be at least 3 characters long"),
+    content: z.string().min(3, "A Todo must be at least 3 characters long"),
 });
 export const toggleTodoSchema = z.object({
     id: z.number().positive().int(),
 });
 export const editTodoSchema = z.object({
     id: z.number().positive().int(),
-    content: z.string().min(3, "A TodoType must be at least 3 characters long"),
+    content: z.string().min(3, "A Todo must be at least 3 characters long"),
 });

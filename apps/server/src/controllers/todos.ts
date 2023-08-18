@@ -1,6 +1,10 @@
 import { and, eq } from "drizzle-orm";
 import { Request, Response } from "express";
-import { addTodoSchema, toggleTodoSchema } from "shared/zodSchemas.js";
+import {
+  addTodoSchema,
+  editTodoSchema,
+  toggleTodoSchema,
+} from "shared/zodSchemas.js";
 
 import { db } from "../db/database.js";
 import { todos, users } from "../schema.js";
@@ -101,6 +105,58 @@ export const postToggleTodo = async (req: Request, res: Response) => {
       await db
         .update(todos)
         .set({ done: !returned[0].done })
+        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+
+      res.json({
+        success: true,
+        message: "Todo updated",
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      errors: "Something went wrong",
+      success: false,
+    });
+  }
+};
+
+export const postEditTodo = async (req: Request, res: Response) => {
+  const userId = req.headers.userId;
+
+  const body = req.body;
+
+  const result = editTodoSchema.safeParse(body);
+
+  if (!result.success) {
+    res.status(400).json({
+      errors: "Invalid content",
+      success: false,
+    });
+
+    return;
+  }
+
+  const { id: todoId, content } = result.data;
+
+  try {
+    if (typeof userId === "string") {
+      const returned = await db
+        .select()
+        .from(todos)
+        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+
+      if (returned.length === 0) {
+        res.status(404).json({
+          errors: "Todo not found",
+          success: false,
+        });
+
+        return;
+      }
+
+      await db
+        .update(todos)
+        .set({ content })
         .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
 
       res.json({
