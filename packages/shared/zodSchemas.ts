@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-import { TodoTypes } from "./types.js";
+export enum TodoTypes {
+  TODO = "todo",
+  STREAK = "streak",
+}
 
 export const signUpSchema = z.object({
   name: z

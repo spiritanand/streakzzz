@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { Request, Response } from "express";
-import { TodoTypes } from "shared/types.js";
 import {
+  TodoTypes,
   addTodoSchema,
   editTodoSchema,
   toggleTodoSchema,

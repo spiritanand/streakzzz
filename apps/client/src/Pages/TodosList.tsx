@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { TodoTypes } from "shared/types.ts";
+import { TodoTypes } from "shared/zodSchemas.ts";
 
 import Loading from "./Loading/Loading.tsx";
 import TodoItem from "../Components/Todos/TodoItem.tsx";

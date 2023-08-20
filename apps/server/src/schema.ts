@@ -8,7 +8,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { TodoTypes } from "shared/types.js";
+import { TodoTypes } from "shared/zodSchemas.js";
 
 // Tables
 export const users = mysqlTable("users", {

@@ -3,8 +3,7 @@ import React from "react";
 import { UseFormSetValue } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { TodoTypes } from "shared/types.ts";
-import { TAddTodoSchema } from "shared/zodSchemas.ts";
+import { TAddTodoSchema, TodoTypes } from "shared/zodSchemas.ts";
 
 import { TTodoType } from "../Types/types.ts";
 import { queryClient } from "../main.tsx";

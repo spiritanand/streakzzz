@@ -7,7 +7,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import { TodoTypes } from "shared/types.ts";
+import { TodoTypes } from "shared/zodSchemas.ts";
 
 import Root from "./Components/Root.tsx";
 import ProtectedRoute from "./Components/Utility/ProtectedRoute.tsx";

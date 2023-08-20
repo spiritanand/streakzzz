@@ -2,8 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { XCircle } from "react-feather";
 import { useForm } from "react-hook-form";
-import { TodoTypes } from "shared/types.ts";
-import { TAddTodoSchema, addTodoSchema } from "shared/zodSchemas.ts";
+import { TAddTodoSchema, TodoTypes, addTodoSchema } from "shared/zodSchemas.ts";
 
 import useA11yModal from "../../hooks/useA11yModal.ts";
 import { useMutateTodo } from "../../hooks/useMutateTodo.ts";

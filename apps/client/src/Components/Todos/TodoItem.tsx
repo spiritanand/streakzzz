@@ -4,8 +4,11 @@ import { useState } from "react";
 import { Check, Trash2, X } from "react-feather";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { TodoTypes } from "shared/types.ts";
-import { TEditTodoSchema, editTodoSchema } from "shared/zodSchemas.ts";
+import {
+  TEditTodoSchema,
+  TodoTypes,
+  editTodoSchema,
+} from "shared/zodSchemas.ts";
 
 import { TTodoType } from "../../Types/types.ts";
 import { queryClient } from "../../main.tsx";
