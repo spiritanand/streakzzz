@@ -6,11 +6,11 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { TEditTodoSchema, editTodoSchema } from "shared/zodSchemas.ts";
 
-import { TodoType } from "../../Types/types.ts";
+import { TTodoType } from "../../Types/types.ts";
 import { queryClient } from "../../main.tsx";
 
 type TodoItemProps = {
-  todo: TodoType;
+  todo: TTodoType;
 };
 
 function TodoItem({ todo }: TodoItemProps) {

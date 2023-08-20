@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { TodoTypes } from "./types.js";
+
 export const signUpSchema = z.object({
   name: z
     .string()
@@ -28,6 +30,7 @@ export const addTodoSchema = z.object({
     .string()
     .min(3, "A Todo must be at least 3 characters long")
     .refine((str) => str.trim().length > 2, "Remove redundant spaces"),
+  type: z.nativeEnum(TodoTypes),
 });
 export type TAddTodoSchema = z.infer<typeof addTodoSchema>;
 

@@ -8,11 +8,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
-
-enum TodoType {
-  TODO = "TODO",
-  STREAK = "STREAK",
-}
+import { TodoTypes } from "shared/types.js";
 
 // Tables
 export const users = mysqlTable("users", {
@@ -28,6 +24,7 @@ export const todos = mysqlTable("todos", {
   done: boolean("done").default(false),
   timestamp: timestamp("timestamp").defaultNow(),
   userId: int("user_id").notNull(),
+  type: text("type").default(TodoTypes.TODO),
 });
 
 // Types

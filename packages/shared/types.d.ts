@@ -1,3 +1,4 @@
-export interface Types {
-    name: string;
+export declare enum TodoTypes {
+    TODO = "todo",
+    STREAK = "streak"
 }

@@ -1,5 +1,5 @@
 function Streakz() {
-  return <div>Streakz Page</div>;
+  return <div className="min-h-screen">Streak</div>;
 }
 
 export default Streakz;
