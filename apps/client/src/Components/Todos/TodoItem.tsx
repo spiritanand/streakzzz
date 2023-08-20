@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
-import { Check, Delete, X } from "react-feather";
+import { Check, Trash2, X } from "react-feather";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { TEditTodoSchema, editTodoSchema } from "shared/zodSchemas.ts";
@@ -50,7 +50,7 @@ function TodoItem({ todo }: TodoItemProps) {
       if (isDirty) {
         const response = await axios.patch("/todo/edit", data);
 
-        resetField("content", { defaultValue: data.content });
+        resetField("content", { defaultValue: data.content.trim() });
 
         toast.success(response.data.message);
         await queryClient.invalidateQueries("todos");
@@ -89,15 +89,25 @@ function TodoItem({ todo }: TodoItemProps) {
         noValidate
       >
         <input
-          className={`w-full rounded bg-transparent p-2 outline-none focus:bg-gray-200 focus:text-gray-900 ${
-            isDirty && !isValid ? "border-2 border-red-400" : ""
-          } ${isDirty && isValid ? "border-2 border-amber-400" : ""}`}
+          className={`w-full rounded bg-transparent p-2 outline-none  ${
+            isDone
+              ? "pointer-events-none cursor-not-allowed bg-gray-500 text-gray-700 line-through"
+              : "focus:bg-gray-200 focus:text-gray-900"
+          } ${isDirty && !isValid ? "border-2 border-red-400" : ""} ${
+            isDirty && isValid ? "border-2 border-amber-400" : ""
+          }`}
           {...register("content")}
           onFocus={() => {
             setIsEditing(true);
           }}
           onBlur={(e) => {
-            if (e.relatedTarget?.nodeName === "BUTTON") return;
+            const targetElement = e.relatedTarget as HTMLInputElement;
+            if (
+              e.relatedTarget?.nodeName === "BUTTON" &&
+              (targetElement?.title === "Cancel" ||
+                targetElement?.title === "Save")
+            )
+              return;
 
             setIsEditing(false);
           }}
@@ -119,6 +129,7 @@ function TodoItem({ todo }: TodoItemProps) {
         )}
         <button
           type="submit"
+          title="Save"
           className={`${
             isEditing ? "absolute" : "hidden"
           }  -bottom-7 right-12 rounded-md bg-gray-400 text-gray-900 transition-colors duration-200 hover:bg-green-600`}
@@ -127,6 +138,7 @@ function TodoItem({ todo }: TodoItemProps) {
         </button>
         <button
           type="button"
+          title="Cancel"
           className={`${
             isEditing ? "absolute" : "hidden"
           } -bottom-7 right-4 rounded-md bg-gray-400 text-gray-900 transition-colors duration-200 hover:bg-red-600`}
@@ -138,8 +150,8 @@ function TodoItem({ todo }: TodoItemProps) {
           <X />
         </button>
       </form>
-      <button onClick={handleDeleteTodo}>
-        <Delete className="cursor-pointer" />
+      <button onClick={handleDeleteTodo} title="Delete">
+        <Trash2 className="cursor-pointer" />
       </button>
     </li>
   );

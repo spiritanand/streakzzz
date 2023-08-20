@@ -53,7 +53,9 @@ export const postAddTodo = async (req: Request, res: Response) => {
 
   try {
     if (typeof userId === "string") {
-      await db.insert(todos).values({ content, userId: +userId });
+      await db
+        .insert(todos)
+        .values({ content: content.trim(), userId: +userId });
 
       res.json({
         success: true,
@@ -156,7 +158,7 @@ export const postEditTodo = async (req: Request, res: Response) => {
 
       await db
         .update(todos)
-        .set({ content })
+        .set({ content: content.trim() })
         .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
 
       res.json({

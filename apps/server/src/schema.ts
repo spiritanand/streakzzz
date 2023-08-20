@@ -9,6 +9,11 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
+enum TodoType {
+  TODO = "TODO",
+  STREAK = "STREAK",
+}
+
 // Tables
 export const users = mysqlTable("users", {
   id: serial("id").primaryKey(),

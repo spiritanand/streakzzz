@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
-import { ReactQueryDevtools } from "react-query/devtools";
+// import { ReactQueryDevtools } from "react-query/devtools";
 import {
   Route,
   RouterProvider,
@@ -13,10 +13,11 @@ import ProtectedRoute from "./Components/Utility/ProtectedRoute.tsx";
 import Login from "./Pages/Auth/Login.tsx";
 import SignUp from "./Pages/Auth/SignUp.tsx";
 import Home from "./Pages/Home.tsx";
-import Todos from "./Pages/Todos/Todos.tsx";
+import Streakz from "./Pages/Streakz.tsx";
+import Todos from "./Pages/Todos.tsx";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,7 +27,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<Login />} />
       <Route element={<ProtectedRoute />}>
         <Route path="todos" element={<Todos />} />
-        <Route path="streakz" element={<div>Coming Soon</div>} />
+        <Route path="streakz" element={<Streakz />} />
       </Route>
     </Route>,
   ),
@@ -35,7 +36,7 @@ const router = createBrowserRouter(
 function App() {
   return (
     <>
-      <ReactQueryDevtools initialIsOpen={true} />
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
       <Toaster position="bottom-center" />
       <RouterProvider router={router} />
     </>

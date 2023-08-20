@@ -11,21 +11,14 @@ export const signUpSchema = z.object({
         .max(100)
         .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{10,100}$/, "Password must contain at least one letter, one digit and a special character"),
 });
-export const loginSchema = z.object({
-    email: z.string().email(),
-    password: z
-        .string()
-        .min(10, "Password must be at least 10 characters long")
-        .max(100)
-        .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{10,100}$/, "Password must contain at least one letter, one digit and a special character"),
-});
+export const loginSchema = signUpSchema.omit({ name: true });
 export const addTodoSchema = z.object({
-    content: z.string().min(3, "A Todo must be at least 3 characters long"),
+    content: z
+        .string()
+        .min(3, "A Todo must be at least 3 characters long")
+        .refine((str) => str.trim().length > 2, "Remove redundant spaces"),
 });
 export const toggleTodoSchema = z.object({
     id: z.number().positive().int(),
 });
-export const editTodoSchema = z.object({
-    id: z.number().positive().int(),
-    content: z.string().min(3, "A Todo must be at least 3 characters long"),
-});
+export const editTodoSchema = addTodoSchema.merge(toggleTodoSchema);

@@ -13,10 +13,11 @@ export declare const signUpSchema: z.ZodObject<{
     password: string;
 }>;
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
-export declare const loginSchema: z.ZodObject<{
+export declare const loginSchema: z.ZodObject<Omit<{
+    name: z.ZodString;
     email: z.ZodString;
     password: z.ZodString;
-}, "strip", z.ZodTypeAny, {
+}, "name">, "strip", z.ZodTypeAny, {
     email: string;
     password: string;
 }, {
@@ -25,7 +26,7 @@ export declare const loginSchema: z.ZodObject<{
 }>;
 export type TLoginSchema = z.infer<typeof loginSchema>;
 export declare const addTodoSchema: z.ZodObject<{
-    content: z.ZodString;
+    content: z.ZodEffects<z.ZodString, string, string>;
 }, "strip", z.ZodTypeAny, {
     content: string;
 }, {
@@ -41,8 +42,8 @@ export declare const toggleTodoSchema: z.ZodObject<{
 }>;
 export type TToggleTodoSchema = z.infer<typeof toggleTodoSchema>;
 export declare const editTodoSchema: z.ZodObject<{
+    content: z.ZodEffects<z.ZodString, string, string>;
     id: z.ZodNumber;
-    content: z.ZodString;
 }, "strip", z.ZodTypeAny, {
     content: string;
     id: number;
