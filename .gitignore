@@ -3,8 +3,8 @@
 
 # Ignore dist directories
 **/dist/
-**/*.js
-**/*.d.ts
+packages/**/*.js
+packages/**/*.d.ts
 
 # Ignore pnpm-store (pnpm's cache)
 .pnpm-store/
