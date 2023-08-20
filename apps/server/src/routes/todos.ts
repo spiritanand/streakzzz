@@ -10,7 +10,7 @@ import {
 
 const router: Router = Router();
 
-router.get("/todos", getTodos);
+router.get("/todos/:type", getTodos);
 
 router.post("/todo/add", postAddTodo);
 

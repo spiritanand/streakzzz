@@ -1,16 +1,17 @@
 import axios from "axios";
 import { useQuery } from "react-query";
+import { TodoTypes } from "shared/types.ts";
 
 import Loading from "./Loading/Loading.tsx";
 import TodoItem from "../Components/Todos/TodoItem.tsx";
 import { TTodoType } from "../Types/types.ts";
 
-function Todos() {
+function TodosList({ queryKey }: { queryKey: TodoTypes }) {
   const { data, isLoading, error } = useQuery(
-    "todos",
-    () => axios.get("/todos"),
+    [queryKey],
+    () => axios.get(`/todos/${queryKey}`),
     {
-      refetchOnWindowFocus: false,
+      // refetchOnWindowFocus: true,
       staleTime: 5 * 60 * 1000,
     },
   );
@@ -20,17 +21,19 @@ function Todos() {
   if (error)
     return (
       <h1 className="min-h-screen text-center text-3xl">
-        Could not load todos!
+        Could not load {queryKey}! 🥺
       </h1>
     );
 
   return (
     <div className="min-h-screen">
-      <h1 className="text-center text-xl font-extrabold">Your Todos</h1>
+      <h1 className="text-center text-xl font-extrabold">
+        Your {queryKey.toUpperCase()}
+      </h1>
       {data?.data?.todos.length > 0 ? (
         <ul className="container mx-auto mt-5 flex flex-col gap-10">
           {data?.data?.todos?.map((todo: TTodoType) => (
-            <TodoItem key={todo.id} todo={todo} />
+            <TodoItem key={todo.id} todo={todo} queryKey={queryKey} />
           ))}
         </ul>
       ) : (
@@ -42,4 +45,4 @@ function Todos() {
   );
 }
 
-export default Todos;
+export default TodosList;

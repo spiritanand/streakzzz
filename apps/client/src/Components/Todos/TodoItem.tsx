@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, Trash2, X } from "react-feather";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { TodoTypes } from "shared/types.ts";
 import { TEditTodoSchema, editTodoSchema } from "shared/zodSchemas.ts";
 
 import { TTodoType } from "../../Types/types.ts";
@@ -11,9 +12,10 @@ import { queryClient } from "../../main.tsx";
 
 type TodoItemProps = {
   todo: TTodoType;
+  queryKey: TodoTypes;
 };
 
-function TodoItem({ todo }: TodoItemProps) {
+function TodoItem({ todo, queryKey }: TodoItemProps) {
   const {
     register,
     handleSubmit,
@@ -41,7 +43,7 @@ function TodoItem({ todo }: TodoItemProps) {
       if (e instanceof Error) toast.error(e.message);
       else toast.error("Something went wrong");
     } finally {
-      await queryClient.invalidateQueries("todos");
+      await queryClient.invalidateQueries([queryKey]);
     }
   };
 
@@ -53,13 +55,13 @@ function TodoItem({ todo }: TodoItemProps) {
         resetField("content", { defaultValue: data.content.trim() });
 
         toast.success(response.data.message);
-        await queryClient.invalidateQueries("todos");
+        await queryClient.invalidateQueries([queryKey]);
       }
       setIsEditing(false);
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
       setIsEditing(true);
-      await queryClient.invalidateQueries("todos");
+      await queryClient.invalidateQueries([queryKey]);
     }
   };
 
@@ -71,7 +73,7 @@ function TodoItem({ todo }: TodoItemProps) {
       if (e instanceof Error) toast.error(e.message);
       else toast.error("Something went wrong");
     } finally {
-      await queryClient.invalidateQueries("todos");
+      await queryClient.invalidateQueries([queryKey]);
     }
   };
 

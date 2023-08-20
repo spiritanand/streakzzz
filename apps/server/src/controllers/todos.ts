@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { Request, Response } from "express";
+import { TodoTypes } from "shared/types.js";
 import {
   addTodoSchema,
   editTodoSchema,
@@ -11,13 +12,28 @@ import { todos, users } from "../schema.js";
 
 export const getTodos = async (req: Request, res: Response) => {
   const userId = req.headers.userId;
+  const params = req.params;
+
+  const type = params.type;
+
+  if (type !== TodoTypes.TODO && type !== TodoTypes.STREAK) {
+    res.status(400).json({
+      errors: "Invalid type",
+      success: false,
+    });
+    return;
+  }
 
   try {
     if (typeof userId === "string") {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const userTodos = await db.query.users.findFirst({
         where: eq(users.id, +userId),
         with: {
-          todos: true,
+          todos: {
+            where: (todoItem) => eq(todoItem.type, type),
+          },
         },
       });
 
@@ -25,7 +41,13 @@ export const getTodos = async (req: Request, res: Response) => {
         todos: userTodos?.todos,
         success: true,
       });
+      return;
     }
+
+    res.status(500).json({
+      errors: "Invalid User ID",
+      success: false,
+    });
   } catch (e) {
     res.status(500).json({
       errors: "Something went wrong",
@@ -49,13 +71,15 @@ export const postAddTodo = async (req: Request, res: Response) => {
     return;
   }
 
-  const { content } = result.data;
+  const { content, type } = result.data;
 
   try {
     if (typeof userId === "string") {
-      await db
-        .insert(todos)
-        .values({ content: content.trim(), userId: +userId });
+      await db.insert(todos).values({
+        content: content.trim(),
+        type,
+        userId: +userId,
+      });
 
       res.json({
         success: true,
@@ -111,7 +135,7 @@ export const postToggleTodo = async (req: Request, res: Response) => {
 
       res.json({
         success: true,
-        message: "Todo updated",
+        message: "Updated",
       });
     }
   } catch (e) {
@@ -149,7 +173,7 @@ export const postEditTodo = async (req: Request, res: Response) => {
 
       if (returned.length === 0) {
         res.status(404).json({
-          errors: "Todo not found",
+          errors: "Not found",
           success: false,
         });
 
@@ -163,7 +187,7 @@ export const postEditTodo = async (req: Request, res: Response) => {
 
       res.json({
         success: true,
-        message: "Todo updated",
+        message: "Updated",
       });
     }
   } catch (e) {
@@ -190,7 +214,7 @@ export const deleteTodo = async (req: Request, res: Response) => {
 
       if (returned.length === 0) {
         res.status(404).json({
-          errors: "Todo not found",
+          errors: "Not found",
           success: false,
         });
 
@@ -203,7 +227,7 @@ export const deleteTodo = async (req: Request, res: Response) => {
 
       res.json({
         success: true,
-        message: "Todo deleted",
+        message: "Deleted",
       });
     }
   } catch (e) {

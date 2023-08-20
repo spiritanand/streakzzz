@@ -43,5 +43,5 @@ module.exports = {
       },
     ],
   },
-  ignorePatterns: ["**/dist/*", "**/node_modules/*", "**/*.js"],
+  ignorePatterns: ["**/dist/*", "**/node_modules/*", "**/*.js", "**/*.d.ts"],
 };

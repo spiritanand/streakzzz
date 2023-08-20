@@ -30,7 +30,7 @@ export const addTodoSchema = z.object({
     .string()
     .min(3, "A Todo must be at least 3 characters long")
     .refine((str) => str.trim().length > 2, "Remove redundant spaces"),
-  type: z.nativeEnum(TodoTypes),
+  type: z.nativeEnum(TodoTypes).optional().default(TodoTypes.TODO),
 });
 export type TAddTodoSchema = z.infer<typeof addTodoSchema>;
 

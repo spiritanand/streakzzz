@@ -19,41 +19,48 @@ export function useMutateTodo(
     },
     {
       onMutate: async (data: TAddTodoSchema) => {
-        await queryClient.cancelQueries("todos");
+        await queryClient.cancelQueries(["todos"]);
 
         const previousTodos: { data: { todos: TTodoType[] } } | undefined =
-          queryClient.getQueryData("todos");
+          data.type === TodoTypes.STREAK
+            ? queryClient.getQueryData([TodoTypes.STREAK])
+            : queryClient.getQueryData([TodoTypes.TODO]);
 
         if (previousTodos?.data?.todos) {
-          queryClient.setQueryData("todos", () => {
-            return {
-              data: {
-                success: true,
-                todos: [
-                  ...previousTodos.data.todos,
-                  {
-                    content: data.content,
-                    type: data.type,
-                    id: Date.now(),
-                    done: false,
-                  },
-                ],
-              },
-            };
-          });
-
           if (data.type === TodoTypes.STREAK) {
             toast.success("Streak added 🔥️");
           } else {
+            queryClient.setQueryData(["todos"], () => {
+              return {
+                data: {
+                  success: true,
+                  todos: [
+                    ...previousTodos.data.todos,
+                    {
+                      content: data.content,
+                      type: data.type,
+                      id: Date.now(),
+                      done: false,
+                    },
+                  ],
+                },
+              };
+            });
+
             toast.success("Todo added ✌️");
           }
+
           setAddTodo(false);
         }
 
         return { previousTodos };
       },
       onError: (error, data, context) => {
-        queryClient.setQueryData("todos", context?.previousTodos);
+        if (data.type === TodoTypes.STREAK) {
+          queryClient.setQueryData([TodoTypes.STREAK], context?.previousTodos);
+        } else {
+          queryClient.setQueryData([TodoTypes.TODO], context?.previousTodos);
+        }
 
         setAddTodo(true);
 
@@ -64,7 +71,8 @@ export function useMutateTodo(
         setValue("type", data.type);
       },
       onSettled: async () => {
-        await queryClient.invalidateQueries("todos");
+        await queryClient.invalidateQueries([TodoTypes.TODO]);
+        await queryClient.invalidateQueries([TodoTypes.STREAK]);
       },
     },
   );
