@@ -1,5 +1,7 @@
+import { Navigate } from "react-router-dom";
+
 const Home = () => {
-  return <div>Coming Soon</div>;
+  return <Navigate to="/login" />;
 };
 
 export default Home;
