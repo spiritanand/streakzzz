@@ -58,7 +58,7 @@ const SignUp = () => {
     }
   };
 
-  if (data?.data.success) return <Navigate to="/todos" replace={true} />;
+  if (data?.data.success) return <Navigate to="/todos" />;
 
   return (
     <div className="container m-auto flex min-h-screen flex-col md:flex-row md:items-center">
@@ -71,7 +71,7 @@ const SignUp = () => {
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-1 flex-col gap-6 font-serif md:items-center md:gap-10"
+        className="flex flex-1 flex-col gap-6 p-7 font-serif md:items-center md:gap-10"
         noValidate
       >
         <div className="mt-6 text-center">

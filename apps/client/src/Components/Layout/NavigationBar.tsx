@@ -59,7 +59,7 @@ const NavigationBar = () => {
       <nav
         className={`${
           isOpen ? "top-16" : "-top-full"
-        } absolute left-0 z-10 bg-gray-900 p-4 font-bold transition-all duration-500 ease-in-out sm:static`}
+        } absolute left-0 z-10 bg-black p-4 font-bold transition-all duration-500 ease-in-out sm:static`}
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <ul className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-4">

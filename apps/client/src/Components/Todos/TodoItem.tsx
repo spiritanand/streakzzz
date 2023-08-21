@@ -22,7 +22,7 @@ function TodoItem({ todo, queryKey }: TodoItemProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty, isValid, isSubmitting },
     resetField,
   } = useForm<TEditTodoSchema>({
     resolver: zodResolver(editTodoSchema),
@@ -51,6 +51,7 @@ function TodoItem({ todo, queryKey }: TodoItemProps) {
   };
 
   const updateTodo: SubmitHandler<TEditTodoSchema> = async (data) => {
+    setIsEditing(false);
     try {
       if (isDirty) {
         const response = await axios.patch("/todo/edit", data);
@@ -60,7 +61,6 @@ function TodoItem({ todo, queryKey }: TodoItemProps) {
         toast.success(response.data.message);
         await queryClient.invalidateQueries([queryKey]);
       }
-      setIsEditing(false);
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
       setIsEditing(true);
@@ -127,7 +127,7 @@ function TodoItem({ todo, queryKey }: TodoItemProps) {
         ) : (
           ""
         )}
-        {!isEditing && isDirty && isValid ? (
+        {!isEditing && !isSubmitting && isDirty && isValid ? (
           <p className="mt-0.5 text-amber-400">Not saved</p>
         ) : (
           ""

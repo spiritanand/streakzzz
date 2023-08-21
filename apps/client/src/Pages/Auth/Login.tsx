@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { isAxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TLoginSchema, loginSchema } from "shared/zodSchemas.ts";
 
 import Button from "../../Components/UI/Button.tsx";
@@ -58,7 +58,7 @@ const Login = () => {
     }
   };
 
-  if (data?.data.success) return <Navigate to="/todos" replace={true} />;
+  if (data?.data.success) return navigate("/todos");
 
   return (
     <div className="container m-auto flex min-h-screen flex-col md:flex-row-reverse md:items-center">
@@ -71,7 +71,7 @@ const Login = () => {
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-1 flex-col gap-6 font-serif md:items-center md:gap-10"
+        className="flex flex-1 flex-col gap-6 p-7 font-serif md:items-center md:gap-10"
         noValidate
       >
         <div className="mt-6 text-center">
