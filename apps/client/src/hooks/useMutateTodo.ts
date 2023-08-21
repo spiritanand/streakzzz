@@ -18,36 +18,30 @@ export function useMutateTodo(
     },
     {
       onMutate: async (data: TAddTodoSchema) => {
-        await queryClient.cancelQueries(["todos"]);
+        await queryClient.cancelQueries([data.type]);
 
         const previousTodos: { data: { todos: TTodoType[] } } | undefined =
-          data.type === TodoTypes.STREAK
-            ? queryClient.getQueryData([TodoTypes.STREAK])
-            : queryClient.getQueryData([TodoTypes.TODO]);
+          queryClient.getQueryData([data.type]);
 
         if (previousTodos?.data?.todos) {
-          if (data.type === TodoTypes.STREAK) {
-            toast.success("Streak added 🔥️");
-          } else {
-            queryClient.setQueryData(["todos"], () => {
-              return {
-                data: {
-                  success: true,
-                  todos: [
-                    ...previousTodos.data.todos,
-                    {
-                      content: data.content,
-                      type: data.type,
-                      id: Date.now(),
-                      done: false,
-                    },
-                  ],
-                },
-              };
-            });
+          queryClient.setQueryData([data.type], () => {
+            return {
+              data: {
+                success: true,
+                todos: [
+                  ...previousTodos.data.todos,
+                  {
+                    content: data.content,
+                    type: data.type,
+                    id: Date.now(),
+                    done: false,
+                  },
+                ],
+              },
+            };
+          });
 
-            toast.success("Todo added ✌️");
-          }
+          toast.success(`${data.type.toUpperCase()} added ✌️`);
 
           setAddTodo(false);
         }
@@ -55,11 +49,7 @@ export function useMutateTodo(
         return { previousTodos };
       },
       onError: (error, data, context) => {
-        if (data.type === TodoTypes.STREAK) {
-          queryClient.setQueryData([TodoTypes.STREAK], context?.previousTodos);
-        } else {
-          queryClient.setQueryData([TodoTypes.TODO], context?.previousTodos);
-        }
+        queryClient.setQueryData([data.type], context?.previousTodos);
 
         setAddTodo(true);
 
