@@ -10,7 +10,7 @@ const connection = await mysql.createConnection({
   host: process.env.MYSQLHOST || "localhost",
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDB || "streakzzz",
+  database: process.env.MYSQLDATABASE || "streakzzz",
 });
 
 const db = drizzle(connection, { schema, mode: "default" });

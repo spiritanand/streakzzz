@@ -11,6 +11,6 @@ export default {
     host: process.env.MYSQLHOST || "localhost",
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
-    database: process.env.MYSQLDB || "streakzzz",
+    database: process.env.MYSQLDATABASE || "streakzzz",
   },
 } satisfies Config;
