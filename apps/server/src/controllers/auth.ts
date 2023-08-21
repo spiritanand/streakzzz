@@ -146,7 +146,10 @@ export const postLogin = async (req: Request, res: Response) => {
 };
 
 export const postLogout = async (req: Request, res: Response) => {
-  res.clearCookie("jwt");
+  res.clearCookie("jwt", {
+    sameSite: prodEnv ? "none" : true,
+    secure: prodEnv,
+  });
   res.json({
     message: "Logout successful",
     success: true,

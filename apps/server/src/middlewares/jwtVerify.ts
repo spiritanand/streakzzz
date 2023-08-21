@@ -7,6 +7,8 @@ import { users } from "../schema.js";
 
 const { verify } = jwt;
 
+const prodEnv = process.env.NODE_ENV === "production";
+
 export const jwtVerify = async (
   req: Request,
   res: Response,
@@ -35,9 +37,15 @@ export const jwtVerify = async (
       next();
     }
   } catch (e) {
-    res.clearCookie("jwt").status(403).json({
-      errors: "Invalid token",
-      success: false,
-    });
+    res
+      .clearCookie("jwt", {
+        sameSite: prodEnv ? "none" : true,
+        secure: prodEnv,
+      })
+      .status(403)
+      .json({
+        errors: "Invalid token",
+        success: false,
+      });
   }
 };
