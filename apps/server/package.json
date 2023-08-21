@@ -8,7 +8,7 @@
     "prestart": "npm run build",
     "start": "concurrently \"npx tsc -w\" \"nodemon dist/apps/server/src/app.js\"",
     "build": "rimraf dist && tsc",
-    "prod": "npm run generate && npm run push:sql && npm run build && node dist/apps/server/src/app.js",
+    "prod": "npm run generate && npm run build && node dist/apps/server/src/app.js",
     "generate": "drizzle-kit generate:mysql",
     "push:sql": "drizzle-kit push:mysql",
     "studio": "drizzle-kit studio"
