@@ -7,6 +7,8 @@ import { loginSchema, signUpSchema } from "shared/zodSchemas.js";
 import { db } from "../db/database.js";
 import { users } from "../schema.js";
 
+const prodEnv = process.env.NODE_ENV === "production";
+
 export const postSignup = async (req: Request, res: Response) => {
   const body = req.body;
 
@@ -42,7 +44,7 @@ export const postSignup = async (req: Request, res: Response) => {
       { email, userId: returned[0].insertId },
       "SECRET_KEY",
       {
-        expiresIn: "10h",
+        expiresIn: "1h",
       },
     );
 
@@ -51,7 +53,8 @@ export const postSignup = async (req: Request, res: Response) => {
       .cookie("jwt", token, {
         httpOnly: true,
         maxAge: 60 * 60 * 1000,
-        sameSite: true,
+        sameSite: prodEnv ? "none" : true,
+        secure: prodEnv,
       })
       .json({
         message: "Signup successful",
@@ -127,7 +130,8 @@ export const postLogin = async (req: Request, res: Response) => {
       .cookie("jwt", token, {
         httpOnly: true,
         maxAge: 60 * 60 * 1000,
-        sameSite: true,
+        sameSite: prodEnv ? "none" : true,
+        secure: prodEnv,
       })
       .json({
         message: "Login successful",
