@@ -7,10 +7,10 @@ import * as schema from "../schema.js";
 dotenv.config();
 
 const connection = await mysql.createConnection({
-  host: process.env.MYSQLHOST || "localhost",
+  host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE || "streakzzz",
+  database: process.env.MYSQLDATABASE,
 });
 
 const db = drizzle(connection, { schema, mode: "default" });
