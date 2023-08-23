@@ -18,7 +18,7 @@ const NavigationBar = () => {
     try {
       await axios.post("/auth/logout");
 
-      await queryClient.invalidateQueries({ queryKey: ["auth"] });
+      await queryClient.invalidateQueries();
       toast.success("Logged Out");
 
       navigate("/");
@@ -71,7 +71,7 @@ const NavigationBar = () => {
               </li>
               <li>
                 <Link to="/signup">
-                  <Button>Sign Up</Button>
+                  <Button className="px-5 py-3">Sign Up</Button>
                 </Link>
               </li>
             </>
@@ -83,7 +83,7 @@ const NavigationBar = () => {
               <li>
                 <Link
                   to="/streakz"
-                  className="rounded-2xl bg-red-600 bg-gradient-to-r from-red-600 to-red-500 p-3 hover:bg-gradient-to-l"
+                  className="rounded-2xl bg-red-600 bg-gradient-to-r from-red-600 to-red-500 px-5 py-3 hover:bg-gradient-to-l"
                 >
                   Streak
                 </Link>

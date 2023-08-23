@@ -19,7 +19,7 @@ export const signUpSchema = z.object({
     .min(10, "Password must be at least 10 characters long")
     .max(100)
     .regex(
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{10,100}$/,
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&^_]).{10,100}$/,
       "Password must contain at least one letter, one digit and a special character",
     ),
 });
