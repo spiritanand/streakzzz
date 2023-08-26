@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { XCircle } from "react-feather";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 import { TAddTodoSchema, TodoTypes, addTodoSchema } from "shared/zodSchemas.ts";
 
 import useA11yModal from "../../hooks/useA11yModal.ts";
@@ -13,6 +14,8 @@ function AddTodoForm({
 }: {
   setAddTodo: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const isTodo = useLocation().pathname.includes(TodoTypes.TODO);
+
   useA11yModal(setAddTodo);
 
   const {
@@ -25,7 +28,7 @@ function AddTodoForm({
     resolver: zodResolver(addTodoSchema),
     defaultValues: {
       content: "",
-      type: TodoTypes.TODO,
+      type: isTodo ? TodoTypes.TODO : TodoTypes.STREAK,
     },
   });
 

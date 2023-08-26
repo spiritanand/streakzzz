@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
-// import { ReactQueryDevtools } from "react-query/devtools";
 import {
   Route,
   RouterProvider,
@@ -13,6 +12,7 @@ import Root from "./Components/Root.tsx";
 import ProtectedRoute from "./Components/Utility/ProtectedRoute.tsx";
 import Login from "./Pages/Auth/Login.tsx";
 import SignUp from "./Pages/Auth/SignUp.tsx";
+import Error from "./Pages/Error.tsx";
 import Home from "./Pages/Home.tsx";
 import TodosList from "./Pages/TodosList.tsx";
 
@@ -21,7 +21,7 @@ axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Root />} errorElement={<div>404</div>}>
+    <Route path="/" element={<Root />} errorElement={<Error />}>
       <Route index={true} element={<Home />} />
       <Route path="signup" element={<SignUp />} />
       <Route path="login" element={<Login />} />
@@ -39,7 +39,6 @@ const router = createBrowserRouter(
 function App() {
   return (
     <>
-      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
       <Toaster position="bottom-center" />
       <RouterProvider router={router} />
     </>
