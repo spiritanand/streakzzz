@@ -32,6 +32,7 @@ function AddTodoForm({
   const { mutate } = useMutateTodo(setAddTodo, setValue);
 
   function onSubmit(data: TAddTodoSchema) {
+    setAddTodo(false);
     mutate(data);
     reset();
   }
@@ -55,23 +56,6 @@ function AddTodoForm({
           noValidate
           onSubmit={handleSubmit(onSubmit)}
         >
-          <label htmlFor="todo" className={"w-full text-center md:w-1/2"}>
-            <input
-              id="todo"
-              {...register("content")}
-              placeholder="Add Todo"
-              className="mb-3 w-full rounded border-none bg-gray-200 p-2 text-gray-900 outline-none focus:bg-gray-50"
-            />
-            <span>
-              {errors.content ? (
-                <span className="text-amber-400">
-                  {errors.content?.message}
-                </span>
-              ) : (
-                ""
-              )}
-            </span>
-          </label>
           <label
             htmlFor="type"
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
@@ -84,6 +68,23 @@ function AddTodoForm({
               <option value={TodoTypes.TODO}>To-do</option>
               <option value={TodoTypes.STREAK}>Streakz</option>
             </select>
+          </label>
+          <label htmlFor="todo" className={"w-full text-center md:w-1/2"}>
+            <input
+              id="todo"
+              {...register("content")}
+              placeholder="Add"
+              className="mb-3 w-full rounded border-none bg-gray-200 p-2 text-gray-900 outline-none focus:bg-gray-50"
+            />
+            <span>
+              {errors.content ? (
+                <span className="text-amber-400">
+                  {errors.content?.message}
+                </span>
+              ) : (
+                ""
+              )}
+            </span>
           </label>
           <Button
             className="mt-7 p-3 sm:p-4"

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
-import { Check, Trash2, X } from "react-feather";
+import { Check, Coffee, Trash2, X } from "react-feather";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import {
@@ -82,12 +82,21 @@ function TodoItem({ todo, queryKey }: TodoItemProps) {
 
   return (
     <li className="flex items-center justify-center gap-6 border-b-amber-500 px-5 sm:gap-10">
-      <input
-        type="checkbox"
-        className="form-checkbox h-5 w-5 cursor-pointer accent-green-500"
-        checked={isDone}
-        onChange={toggleDone}
-      />
+      <div className="relative">
+        <input
+          type="checkbox"
+          className="form-checkbox h-5 w-5 cursor-pointer accent-green-500"
+          checked={isDone}
+          onChange={toggleDone}
+        />
+        {queryKey === TodoTypes.STREAK ? (
+          <span className="absolute mt-3 flex gap-2">
+            <Coffee />
+            {todo.streak}
+          </span>
+        ) : null}
+      </div>
+
       <form
         className="relative flex-1"
         onSubmit={handleSubmit(updateTodo)}
