@@ -1,20 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { isAxiosError } from "axios";
-import { SubmitHandler, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, Navigate } from "react-router-dom";
 import { TSignUpSchema, signUpSchema } from "shared/zodSchemas";
 
 import Button from "../../Components/UI/Button.tsx";
 import Input from "../../Components/UI/Input.tsx";
 import PasswordInput from "../../Components/UI/PasswordInput.tsx";
 import signupImage from "../../assets/signup.avif";
-import useAuth from "../../hooks/useAuth.ts";
-import { queryClient } from "../../main.tsx";
+import useAuth, { useAuthSubmit } from "../../hooks/useAuth.ts";
 
 const SignUp = () => {
-  const navigate = useNavigate();
-
   const { data } = useAuth();
 
   const {
@@ -26,37 +21,7 @@ const SignUp = () => {
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit: SubmitHandler<TSignUpSchema> = async (input) => {
-    try {
-      const response = await axios.post("/auth/signup", JSON.stringify(input), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const res = response.data;
-
-      if (res.success) {
-        toast.success("Signed Up 🚀");
-        await queryClient.invalidateQueries({ queryKey: ["auth"] });
-        navigate("/todos");
-      } else {
-        toast.error("Something went wrong");
-      }
-    } catch (e) {
-      if (!isAxiosError(e)) throw e;
-
-      if (typeof e.response?.data.errors === "string")
-        toast.error(e.response?.data.errors);
-
-      const errorData = e.response?.data.errors;
-      Object.keys(errorData).forEach((key) => {
-        const value = errorData[key];
-        if (typeof value === "string")
-          setError(key as keyof TSignUpSchema, { message: value });
-      });
-    }
-  };
+  const onSubmit = useAuthSubmit("/auth/signup", setError);
 
   if (data?.data.success) return <Navigate to="/todos" />;
 
