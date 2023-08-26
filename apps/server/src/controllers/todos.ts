@@ -128,9 +128,15 @@ export const postToggleTodo = async (req: Request, res: Response) => {
         return;
       }
 
+      let streak = 0;
+      if (returned[0].type === TodoTypes.STREAK) {
+        if (returned[0].done) streak = returned[0].streak - 1;
+        else streak = returned[0].streak + 1;
+      }
+
       await db
         .update(todos)
-        .set({ done: !returned[0].done })
+        .set({ done: !returned[0].done, streak })
         .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
 
       res.json({

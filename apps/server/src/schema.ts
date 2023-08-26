@@ -21,10 +21,11 @@ export const users = mysqlTable("users", {
 export const todos = mysqlTable("todos", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
-  done: boolean("done").default(false),
-  timestamp: timestamp("timestamp").defaultNow(),
+  done: boolean("done").default(false).notNull(),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
   userId: int("user_id").notNull(),
-  type: text("type").default(TodoTypes.TODO),
+  type: text("type").default(TodoTypes.TODO).notNull(),
+  streak: int("streak").default(0).notNull(),
 });
 
 // Types

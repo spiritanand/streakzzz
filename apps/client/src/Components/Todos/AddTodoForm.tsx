@@ -38,7 +38,10 @@ function AddTodoForm({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 top-0 z-10 bg-gray-800 opacity-90" />
+      <div
+        className="fixed bottom-0 left-0 right-0 top-0 z-10 bg-gray-800 opacity-90"
+        onClick={() => setAddTodo(false)}
+      />
       <button
         type="button"
         onClick={() => setAddTodo(false)}
