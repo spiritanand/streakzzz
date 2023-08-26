@@ -9,6 +9,12 @@ import {
 
 import { db } from "../db/database.js";
 import { todos, users } from "../schema.js";
+import { userTodo } from "../utils/dbQueries.js";
+import {
+  sendError,
+  sendNotFound,
+  sendSomethingWentWrong,
+} from "../utils/responses.js";
 
 export const getTodos = async (req: Request, res: Response) => {
   const userId = req.headers.userId;
@@ -17,17 +23,13 @@ export const getTodos = async (req: Request, res: Response) => {
   const type = params.type;
 
   if (type !== TodoTypes.TODO && type !== TodoTypes.STREAK) {
-    res.status(400).json({
-      errors: "Invalid type",
-      success: false,
-    });
+    sendError(res, "Invalid type");
+
     return;
   }
 
   try {
     if (typeof userId === "string") {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const userTodos = await db.query.users.findFirst({
         where: eq(users.id, +userId),
         with: {
@@ -49,10 +51,7 @@ export const getTodos = async (req: Request, res: Response) => {
       success: false,
     });
   } catch (e) {
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
+    sendSomethingWentWrong(res);
   }
 };
 
@@ -63,10 +62,7 @@ export const postAddTodo = async (req: Request, res: Response) => {
   const result = addTodoSchema.safeParse(body);
 
   if (!result.success) {
-    res.status(400).json({
-      errors: result.error?.errors[0].message,
-      success: false,
-    });
+    sendError(res, result.error?.errors[0].message);
 
     return;
   }
@@ -87,10 +83,7 @@ export const postAddTodo = async (req: Request, res: Response) => {
       });
     }
   } catch (e) {
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
+    sendSomethingWentWrong(res);
   }
 };
 
@@ -102,10 +95,7 @@ export const postToggleTodo = async (req: Request, res: Response) => {
   const result = toggleTodoSchema.safeParse(body);
 
   if (!result.success) {
-    res.status(400).json({
-      errors: result.error?.errors[0].message,
-      success: false,
-    });
+    sendError(res, result.error?.errors[0].message);
 
     return;
   }
@@ -114,10 +104,7 @@ export const postToggleTodo = async (req: Request, res: Response) => {
 
   try {
     if (typeof userId === "string") {
-      const returned = await db
-        .select()
-        .from(todos)
-        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+      const returned = await userTodo(todoId, userId);
 
       if (returned.length === 0) {
         res.status(404).json({
@@ -145,10 +132,7 @@ export const postToggleTodo = async (req: Request, res: Response) => {
       });
     }
   } catch (e) {
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
+    sendSomethingWentWrong(res);
   }
 };
 
@@ -160,10 +144,7 @@ export const postEditTodo = async (req: Request, res: Response) => {
   const result = editTodoSchema.safeParse(body);
 
   if (!result.success) {
-    res.status(400).json({
-      errors: "Invalid content",
-      success: false,
-    });
+    sendError(res, "Invalid content");
 
     return;
   }
@@ -172,16 +153,10 @@ export const postEditTodo = async (req: Request, res: Response) => {
 
   try {
     if (typeof userId === "string") {
-      const returned = await db
-        .select()
-        .from(todos)
-        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+      const returned = await userTodo(todoId, userId);
 
       if (returned.length === 0) {
-        res.status(404).json({
-          errors: "Not found",
-          success: false,
-        });
+        sendNotFound(res);
 
         return;
       }
@@ -197,10 +172,7 @@ export const postEditTodo = async (req: Request, res: Response) => {
       });
     }
   } catch (e) {
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
+    sendSomethingWentWrong(res);
   }
 };
 
@@ -213,16 +185,10 @@ export const deleteTodo = async (req: Request, res: Response) => {
 
   try {
     if (typeof userId === "string" && typeof todoId === "string") {
-      const returned = await db
-        .select()
-        .from(todos)
-        .where(and(eq(todos.id, +todoId), eq(todos.userId, +userId)));
+      const returned = await userTodo(+todoId, userId);
 
       if (returned.length === 0) {
-        res.status(404).json({
-          errors: "Not found",
-          success: false,
-        });
+        sendNotFound(res);
 
         return;
       }
@@ -237,9 +203,6 @@ export const deleteTodo = async (req: Request, res: Response) => {
       });
     }
   } catch (e) {
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
+    sendSomethingWentWrong(res);
   }
 };

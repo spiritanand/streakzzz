@@ -6,6 +6,8 @@ import { loginSchema, signUpSchema } from "shared/zodSchemas.js";
 
 import { db } from "../db/database.js";
 import { users } from "../schema.js";
+import handleZodError from "../utils/handleZodErrors.js";
+import { sendSomethingWentWrong } from "../utils/responses.js";
 
 const prodEnv = process.env.NODE_ENV === "production";
 
@@ -14,19 +16,8 @@ export const postSignup = async (req: Request, res: Response) => {
 
   const result = signUpSchema.safeParse(body);
 
-  let zodErrors = {};
   if (!result.success) {
-    result.error?.errors.forEach((issue) => {
-      zodErrors = {
-        ...zodErrors,
-        [issue.path[0]]: issue.message,
-      };
-    });
-
-    res.status(400).json({
-      errors: zodErrors,
-      success: false,
-    });
+    handleZodError(result, res);
 
     return;
   }
@@ -69,10 +60,7 @@ export const postSignup = async (req: Request, res: Response) => {
       return;
     }
 
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
+    sendSomethingWentWrong(res);
   }
 };
 
@@ -81,19 +69,8 @@ export const postLogin = async (req: Request, res: Response) => {
 
   const result = loginSchema.safeParse(body);
 
-  let zodErrors = {};
   if (!result.success) {
-    result.error?.errors.forEach((issue) => {
-      zodErrors = {
-        ...zodErrors,
-        [issue.path[0]]: issue.message,
-      };
-    });
-
-    res.status(400).json({
-      errors: zodErrors,
-      success: false,
-    });
+    handleZodError(result, res);
 
     return;
   }
@@ -108,6 +85,7 @@ export const postLogin = async (req: Request, res: Response) => {
         errors: "Invalid credentials",
         success: false,
       });
+
       return;
     }
 
@@ -118,6 +96,7 @@ export const postLogin = async (req: Request, res: Response) => {
         errors: "Invalid credentials",
         success: false,
       });
+
       return;
     }
 
@@ -138,10 +117,7 @@ export const postLogin = async (req: Request, res: Response) => {
         success: true,
       });
   } catch (error) {
-    res.status(500).json({
-      errors: "Something went wrong",
-      success: false,
-    });
+    sendSomethingWentWrong(res);
   }
 };
 

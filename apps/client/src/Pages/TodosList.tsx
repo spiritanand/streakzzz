@@ -5,6 +5,7 @@ import { TodoTypes } from "shared/zodSchemas.ts";
 
 import TodoItem from "../Components/Todos/TodoItem.tsx";
 import { TTodoType } from "../Types/types.ts";
+
 function TodosList({ queryKey }: { queryKey: TodoTypes }) {
   const [parent] = useAutoAnimate(/* optional config */);
 
@@ -29,7 +30,9 @@ function TodosList({ queryKey }: { queryKey: TodoTypes }) {
         Your {queryKey.toUpperCase()}S
       </h1>
       <ul
-        className="container mx-auto mt-5 flex flex-col gap-10"
+        className={`container mx-auto mt-5 flex flex-col ${
+          queryKey === TodoTypes.STREAK ? "gap-14" : "gap-10"
+        }`}
         ref={parent}
         key={queryKey}
       >
