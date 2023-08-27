@@ -105,7 +105,7 @@ function TodoItem({ todo, queryKey }: TodoItemProps) {
         <input
           className={`w-full rounded bg-transparent p-2 outline-none  ${
             isDone
-              ? "pointer-events-none cursor-not-allowed bg-gray-500 text-gray-700 line-through"
+              ? "pointer-events-none cursor-not-allowed text-gray-500 line-through"
               : "focus:bg-gray-200 focus:text-gray-900"
           } ${isDirty && !isValid ? "border-2 border-red-400" : ""} ${
             isDirty && isValid ? "border-2 border-amber-400" : ""

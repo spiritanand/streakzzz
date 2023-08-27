@@ -25,7 +25,7 @@ function TodosList({ queryKey }: { queryKey: TodoTypes }) {
     );
 
   return (
-    <div className="mx-auto min-h-screen max-w-fit">
+    <div className="mx-auto min-h-screen max-w-xl">
       <h1 className="text-center text-xl font-extrabold">
         Your {queryKey.toUpperCase()}S
       </h1>
