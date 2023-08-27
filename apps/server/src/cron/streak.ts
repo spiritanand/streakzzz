@@ -27,7 +27,7 @@ const streak = async () => {
       // If done, reset "done" status
       return db
         .update(todos)
-        .set({ streak: streakTodo.streak + 1, done: false })
+        .set({ done: false })
         .where(eq(todos.id, streakTodo.id));
     });
 
