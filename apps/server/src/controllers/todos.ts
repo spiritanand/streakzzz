@@ -8,7 +8,7 @@ import {
 } from "shared/zodSchemas.js";
 
 import { db } from "../db/database.js";
-import { todos, users } from "../schema.js";
+import { streakzzzTodos, streakzzzUsers } from "../schema.js";
 import { userTodo } from "../utils/dbQueries.js";
 import {
   sendError,
@@ -30,14 +30,16 @@ export const getTodos = async (req: Request, res: Response) => {
 
   try {
     if (typeof userId === "string") {
-      const userTodos = await db.query.users.findFirst({
-        where: eq(users.id, +userId),
+      const userTodos = await db.query.streakzzzUsers.findFirst({
+        where: eq(streakzzzUsers.id, +userId),
         with: {
           todos: {
             where: (todoItem) => eq(todoItem.type, type),
           },
         },
       });
+
+      console.log("fetching todos");
 
       res.json({
         todos: userTodos?.todos,
@@ -71,7 +73,7 @@ export const postAddTodo = async (req: Request, res: Response) => {
 
   try {
     if (typeof userId === "string") {
-      await db.insert(todos).values({
+      await db.insert(streakzzzTodos).values({
         content: content.trim(),
         type,
         userId: +userId,
@@ -122,9 +124,14 @@ export const postToggleTodo = async (req: Request, res: Response) => {
       }
 
       await db
-        .update(todos)
+        .update(streakzzzTodos)
         .set({ done: !returned[0].done, streak })
-        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+        .where(
+          and(
+            eq(streakzzzTodos.id, todoId),
+            eq(streakzzzTodos.userId, +userId),
+          ),
+        );
 
       res.json({
         success: true,
@@ -162,9 +169,14 @@ export const postEditTodo = async (req: Request, res: Response) => {
       }
 
       await db
-        .update(todos)
+        .update(streakzzzTodos)
         .set({ content: content.trim() })
-        .where(and(eq(todos.id, todoId), eq(todos.userId, +userId)));
+        .where(
+          and(
+            eq(streakzzzTodos.id, todoId),
+            eq(streakzzzTodos.userId, +userId),
+          ),
+        );
 
       res.json({
         success: true,
@@ -194,8 +206,13 @@ export const deleteTodo = async (req: Request, res: Response) => {
       }
 
       await db
-        .delete(todos)
-        .where(and(eq(todos.id, +todoId), eq(todos.userId, +userId)));
+        .delete(streakzzzTodos)
+        .where(
+          and(
+            eq(streakzzzTodos.id, +todoId),
+            eq(streakzzzTodos.userId, +userId),
+          ),
+        );
 
       res.json({
         success: true,

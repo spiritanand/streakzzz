@@ -6,14 +6,10 @@ import * as schema from "../schema.js";
 
 dotenv.config();
 
-const poolConnection = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  port: Number(process.env.MYSQLPORT),
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-});
+const connection = await mysql.createConnection(
+  process.env.DATABASE_URL as string,
+);
 
-const db = drizzle(poolConnection, { schema, mode: "default" });
+const db = drizzle(connection, { schema, mode: "planetscale" });
 
 export { db };

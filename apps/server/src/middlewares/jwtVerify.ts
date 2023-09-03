@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import { db } from "../db/database.js";
-import { users } from "../schema.js";
+import { streakzzzUsers } from "../schema.js";
 
 const { verify } = jwt;
 
@@ -26,7 +26,10 @@ export const jwtVerify = async (
     ) {
       const userId = decoded.userId;
 
-      const user = await db.select().from(users).where(eq(users.id, userId));
+      const user = await db
+        .select()
+        .from(streakzzzUsers)
+        .where(eq(streakzzzUsers.id, userId));
 
       if (user.length === 0) {
         throw new Error("No user found");

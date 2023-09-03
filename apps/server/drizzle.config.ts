@@ -8,10 +8,7 @@ export default {
   out: "./drizzle",
   driver: "mysql2",
   dbCredentials: {
-    host: process.env.MYSQLHOST || "localhost",
-    port: Number(process.env.MYSQLPORT),
-    user: process.env.MYSQLUSER,
-    password: process.env.MYSQLPASSWORD,
-    database: process.env.MYSQLDATABASE || "streakzzz",
+    connectionString: process.env.DATABASE_URL as string,
   },
+  tablesFilter: ["streakzzz*"],
 } satisfies Config;

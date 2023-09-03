@@ -11,14 +11,14 @@ import {
 import { TodoTypes } from "shared/zodSchemas.js";
 
 // Tables
-export const users = mysqlTable("users", {
+export const streakzzzUsers = mysqlTable("streakzzzUsers", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   email: varchar("email", { length: 256 }).unique().notNull(),
   password: varchar("password", { length: 256 }).notNull(),
 });
 
-export const todos = mysqlTable("todos", {
+export const streakzzzTodos = mysqlTable("streakzzzTodos", {
   id: serial("id").primaryKey(),
   content: text("content").notNull(),
   done: boolean("done").default(false).notNull(),
@@ -29,17 +29,17 @@ export const todos = mysqlTable("todos", {
 });
 
 // Types
-export type User = InferModel<typeof users>;
-export type Todo = InferModel<typeof todos>;
+export type User = InferModel<typeof streakzzzUsers>;
+export type Todo = InferModel<typeof streakzzzTodos>;
 
 // Relations
-export const usersRelations = relations(users, ({ many }) => ({
-  todos: many(todos),
+export const usersRelations = relations(streakzzzUsers, ({ many }) => ({
+  todos: many(streakzzzTodos),
 }));
 
-export const todosRelations = relations(todos, ({ one }) => ({
-  user: one(users, {
-    fields: [todos.userId],
-    references: [users.id],
+export const todosRelations = relations(streakzzzTodos, ({ one }) => ({
+  user: one(streakzzzUsers, {
+    fields: [streakzzzTodos.userId],
+    references: [streakzzzUsers.id],
   }),
 }));

@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { loginSchema, signUpSchema } from "shared/zodSchemas.js";
 
 import { db } from "../db/database.js";
-import { users } from "../schema.js";
+import { streakzzzUsers } from "../schema.js";
 import handleZodError from "../utils/handleZodErrors.js";
 import { sendSomethingWentWrong } from "../utils/responses.js";
 
@@ -28,7 +28,7 @@ export const postSignup = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const returned = await db
-      .insert(users)
+      .insert(streakzzzUsers)
       .values({ ...body, password: hashedPassword });
 
     const token = jwt.sign(
@@ -78,7 +78,10 @@ export const postLogin = async (req: Request, res: Response) => {
   const { email, password } = result.data;
 
   try {
-    const user = await db.select().from(users).where(eq(users.email, email));
+    const user = await db
+      .select()
+      .from(streakzzzUsers)
+      .where(eq(streakzzzUsers.email, email));
 
     if (user.length === 0) {
       res.status(403).json({
