@@ -33,10 +33,8 @@ const streak = async () => {
 
     // Execute all update promises concurrently
     await Promise.all(updatePromises);
-
-    console.log("Streakzzz checked and updated.");
   } catch (error) {
-    console.error("Error checking and updating streak streakzzzTodos:", error);
+    /* empty */
   }
 };
 

@@ -39,8 +39,6 @@ export const getTodos = async (req: Request, res: Response) => {
         },
       });
 
-      console.log("fetching todos");
-
       res.json({
         todos: userTodos?.todos,
         success: true,
