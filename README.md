@@ -1,6 +1,8 @@
 # Streakzzz
 Streakzzz is a project consisting of a monorepo (using pnpm-workspaces) with client and server applications, along with a shared package for handling input validation using zod schemas. The application offers login/signup functionality and enables users to manage their tasks and streaks(habits).
 
+[Demo Video](https://www.linkedin.com/feed/update/urn:li:activity:7101828265333469184/)
+
 ## Table of Contents
 - [Run locally](#run-locally)  
 - [apps/client (Frontend)](#client-frontend)
